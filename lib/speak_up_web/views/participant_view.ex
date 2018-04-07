@@ -6,7 +6,6 @@ defmodule SpeakUpWeb.ParticipantView do
   end
 
   def connected_people(conn) do
-    participants = GenServer.call({:global, :moderator}, :registered)
-    Enum.map(participants, &(elem(&1, 2)))
+    GenServer.call(ModeratorWorker, :get_all)
   end
 end

@@ -13,7 +13,7 @@ defmodule SpeakUp.Application do
       # Start the endpoint when the application starts
       supervisor(SpeakUpWeb.Endpoint, []),
       # Start your own worker by calling: SpeakUp.Worker.start_link(arg1, arg2, arg3)
-      # worker(SpeakUp.Worker, [arg1, arg2, arg3]),
+       worker(SpeakUp.ModeratorWorker, [:moderator_worker,:moderator]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
