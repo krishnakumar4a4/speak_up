@@ -1,0 +1,23 @@
+<%= if @current_user do %>
+                        <h3>Connected people</h3>
+                                                <table class="table">
+                                                <thead>
+                                                 <tr>
+                                                 <th>id</th>
+                                                        <th>Name</th>
+                                                                    <th>Mute</th>
+                                                                    <th>Can speak</th>
+                                                                     </tr>
+                                                                       </thead>
+                                                                       <tbody>
+                                                                       <%= for key <- connected_people @conn do %>
+                                                                                                                <tr>
+                                                                                                                <td><%=key%></td>
+                                                                                                                      <td>test</td>
+                                                                                                                         <td><%=link "Can Speak",to: participant_path(@conn, :mute, key), class: "btn btn-default btn-xs"%></td>
+                                                                                                                                                                                                                        <td>Can Speak</td>
+                                                                                                                                                                                                                                                                                                                </tr>
+                                                                                                                                                                                                                                                                                                                  <% end %>
+                                                                                                                                                                                                                                                                                                                         </tbody>
+                                                                                                                                                                                                                                                                                                                         </table>
+                     <% end %>
