@@ -10,12 +10,12 @@
                                                                      </tr>
                                                                        </thead>
                                                                        <tbody>
-                                                                       <%= for key <- connected_people @conn do %>
+                                                                       <%= for {key,state} <- connected_people @conn do %>
                                                                                                                 <tr>
                                                                                                                 <td><%=key%></td>
                                                                                                                       <td>test</td>
-                                                                                                                         <td><%=link "Mute",to: participant_path(@conn, :mute, key), class: "btn btn-default btn-xs"%></td>
-                                                                                                                                                                                                                        <td><%=link "Can Speak",to: participant_path(@conn, :can_speak, key), class: "btn btn-default btn-xs"%></td>
+                                                                                                                         <td><%=link "Mute",to: participant_path(@conn, :mute, key), class: "btn btn-default btn-xs"<>btn_state_danger(state)%></td>
+                                                                                                                                                                                                                        <td><%=link "Can Speak",to: participant_path(@conn, :can_speak, key), class: "btn btn-default btn-xs"<>btn_state_success(state)%></td>
                                                                                                                                                                                                                                                                                                                 </tr>
                                                                                                                                                                                                                                                                                                                   <% end %>
                                                                                                                                                                                                                                                                                                                          </tbody>
