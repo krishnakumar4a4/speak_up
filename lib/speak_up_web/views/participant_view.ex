@@ -8,4 +8,20 @@ defmodule SpeakUpWeb.ParticipantView do
   def connected_people(conn) do
     GenServer.call(ModeratorWorker, :get_all)
   end
+
+  def btn_state_success(state) do
+    if state do
+      " btn-success"
+    else
+      ""
+    end
+  end
+
+  def btn_state_danger(state) do
+    if state do
+      ""
+    else
+      " btn-danger"
+    end
+  end
 end
