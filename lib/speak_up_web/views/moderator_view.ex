@@ -1,4 +1,4 @@
-defmodule SpeakUpWeb.ParticipantView do
+defmodule SpeakUpWeb.ModeratorView do
   use SpeakUpWeb, :view
 
   def handler_info(conn) do

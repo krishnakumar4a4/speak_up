@@ -15,7 +15,7 @@ defmodule SpeakUpWeb.SessionController do
       {:ok, conn} ->
         conn
         |> put_flash(:info, "You’re now signed in!")
-        |> redirect(to: participant_path(conn, :index))
+        |> redirect(to: moderator_path(conn, :index))
       {:error, _reason, conn} ->
         conn
         |> put_flash(:error, "Invalid email/password combination")
