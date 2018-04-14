@@ -28,4 +28,8 @@ defmodule SpeakUpWeb.UserController do
         render(conn, "new.html", changeset: changeset)
     end
   end
+
+  def mic(conn, _params) do
+    render(conn, "mic.html")
+  end
 end

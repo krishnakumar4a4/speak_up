@@ -1,4 +1,9 @@
 <%= if @current_user do %>
+    <%= form_for @conn, moderator_path(@conn, :switch_control), [as: :switch], fn f ->%>
+      <%= radio_button f, :mode, :one_by_one, checked: false%> one-by-one
+      <%= radio_button f, :mode, :discussion, checked: true%> Discussion
+      <%= submit "Submit", class: "btn btn-primary"%>
+    <% end %>
                         <h3>Connected people</h3>
                                                 <table class="table">
                                                 <thead>
@@ -14,8 +19,8 @@
                                                                                                                 <tr>
                                                                                                                 <td><%=key%></td>
                                                                                                                       <td>test</td>
-                                                                                                                         <td><%=link "Mute",to: participant_path(@conn, :mute, key), class: "btn btn-default btn-xs"<>btn_state_danger(state)%></td>
-                                                                                                                                                                                                                        <td><%=link "Can Speak",to: participant_path(@conn, :can_speak, key), class: "btn btn-default btn-xs"<>btn_state_success(state)%></td>
+                                                                                                                         <td><%=link "Mute",to: moderator_path(@conn, :mute, key), class: "btn btn-default btn-xs"<>btn_state_danger(state)%></td>
+                                                                                                                                                                                                                        <td><%=link "Can Speak",to: moderator_path(@conn, :can_speak, key), class: "btn btn-default btn-xs"<>btn_state_success(state)%></td>
                                                                                                                                                                                                                                                                                                                 </tr>
                                                                                                                                                                                                                                                                                                                   <% end %>
                                                                                                                                                                                                                                                                                                                          </tbody>

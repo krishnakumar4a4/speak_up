@@ -25,13 +25,17 @@ defmodule SpeakUpWeb.Router do
     get "/", PageController, :index
     resources "/users", UserController, only: [:show, :new, :create]
     resources "/sessions", SessionController, only: [:new, :create, :delete]
-    get "/participants", ParticipantController, :index
+    get "/participants", ModeratorController, :index
   end
 
   scope "/participant", SpeakUpWeb do
     pipe_through [:browser, :with_session] # Use the default browser stack
-    get "/:id/mute", ParticipantController, :mute
-    get "/:id/canspeak", ParticipantController, :can_speak
+    get "/:id/mute", ModeratorController, :mute
+    get "/:id/canspeak", ModeratorController, :can_speak
+    post "/switch-control", ModeratorController, :switch_control
+#    get "/one-by-one", ModeratorController, :switch_to_one_by_one
+#    get "/discussion", ModeratorController, :discussion
+    get "/mic", UserController, :mic
   end
 
   # Other scopes may use custom stacks.
