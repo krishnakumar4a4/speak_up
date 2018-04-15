@@ -19,6 +19,16 @@ defmodule SpeakUpWeb.Router do
     plug SpeakUp.CurrentUser
   end
 
+  #Especially for storing cookie in html for websocket
+  pipeline :with_token do
+    plug :assign_token
+  end
+
+  def assign_token(conn, _) do
+    cookie = conn.cookies["participant_cookie"]
+    assign(conn, :user_token, cookie)
+  end
+
   scope "/", SpeakUpWeb do
     pipe_through [:browser, :with_session] # Use the default browser stack
 
@@ -39,11 +49,11 @@ defmodule SpeakUpWeb.Router do
   end
 
   scope "participant", SpeakUpWeb do
-    pipe_through [:browser, :with_session] # Use the default browser stack
+    pipe_through [:browser, :with_session, :with_token] # Use the default browser stack
     get "/", ParticipantController, :new
     post "/signup", ParticipantController, :create
     get "/signout", ParticipantController, :delete
-    get "/wannaspeak", ParticipantController, :wanna_speak
+#    get "/wannaspeak", ParticipantController, :wanna_speak
     get "/hangup", ParticipantController, :hang_up
   end
 

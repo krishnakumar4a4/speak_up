@@ -5,7 +5,10 @@
 // and connect at the socket path in "lib/web/endpoint.ex":
 import {Socket} from "phoenix"
 
-let socket = new Socket("/socket", {params: {token: window.userToken}});
+let channel;
+function connect() {
+//We obtain user token using plug in router
+    let socket = new Socket("/socket", {params: {token: window.userToken}});
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
@@ -51,12 +54,54 @@ let socket = new Socket("/socket", {params: {token: window.userToken}});
 // Finally, pass the token on connect as below. Or remove it
 // from connect if you don't care about authentication.
 
-socket.connect();
+    socket.connect();
 
+    console.log("connected");
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {});
-channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) });
+    channel = socket.channel("participant:mic", {});
+    channel.join()
+        .receive("ok", resp => {
+            console.log("Joined successfully", resp)
+        })
+        .receive("error", resp => {
+            console.log("Unable to join", resp)
+        });
+}
 
-export default socket
+let statusMessages = document.getElementById("status-messages");
+// if(channel !== undefined) {
+//     console.log("channel is not undefined and can receive");
+//     channel.on('wannaspeak', payload => {
+//         console.log("response is ",payload);
+//         let template = document.createElement("div");
+//         template.innerHTML = `<b>${payload.user}</b>: ${payload.status_message}<br>`;
+//         statusMessages.appendChild(template);
+//         statusMessages.scrollTop = statusMessages.scrollHeight;
+//     });
+// }
+const wann_speak = document.getElementById("wanna-speak");
+if(wann_speak !== null){
+    wann_speak.onclick = function () {
+        console.log("clicked on wanna speak",channel);
+        if(channel !== undefined) {
+            channel.push("wannaspeak", {token: window.userToken})
+            channel.on('wannaspeak', payload => {
+                console.log("response is ",payload);
+                let template = document.createElement("div");
+                template.innerHTML = `<b>Organiser says:</b>: ${payload.status_message}<br>`;
+                statusMessages.appendChild(template);
+                statusMessages.scrollTop = statusMessages.scrollHeight;
+            });
+        }
+    };
+}
+
+window.addEventListener('load', function() {
+    console.log("Page loaded with ",window.userToken);
+
+    if(window.userToken !== undefined && channel === undefined) {
+        //Connects, Only if the channel is not created
+        connect();
+    }
+});
+export default {connect}

@@ -2,11 +2,11 @@ defmodule SpeakUpWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", SpeakUpWeb.RoomChannel
+   channel "participant:*", SpeakUpWeb.ParticipantMicChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
-  # transport :longpoll, Phoenix.Transports.LongPoll
+  transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -19,8 +19,18 @@ defmodule SpeakUpWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(params, socket) do
+    case Map.fetch(params, "token") do
+      {:ok, token} ->
+        case GenServer.call(ModeratorWorker, {:get, token}) do
+          :ok ->
+            {:ok, socket}
+          :donotexist ->
+              :error
+        end
+        :error ->
+          :error
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
