@@ -36,7 +36,8 @@ defmodule SpeakUpWeb.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_speak_up_key",
-    signing_salt: "qxf+FQeh"
+    signing_salt: "qxf+FQeh",
+    encryption_salt: "He^ce@^r>|e>"
 
   plug SpeakUpWeb.Router
 

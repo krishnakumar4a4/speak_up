@@ -1,0 +1,14 @@
+<%= if hasAccess(@conn) do %>
+<ul class="nav nav-pills pull-right">
+    <li><%= link "Sign out", to: participant_path(@conn, :delete) %></li>
+</ul>
+<h1>Tap to speak</h1>
+<br>
+  <%= link "Wanna Speak", to: participant_path(@conn, :wanna_speak), class: "btn btn-default"%>
+  <%= link "Hang Up", to: participant_path(@conn, :hang_up), class: "btn btn-default"%>
+<input type="range" min="1" max="40">
+<pre></pre>
+<p>Biquad filter frequency response for: </p>
+<ul class="freq-response-output">
+</ul>
+<%end%>

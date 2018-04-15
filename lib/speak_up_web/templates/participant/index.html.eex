@@ -1,0 +1,10 @@
+<h1> Participant Sign Up </h1>
+<%= form_for @conn, participant_path(@conn, :create), [as: :participant], fn f -> %>
+<div class = "form-group">
+    <%= text_input f, :name, placeholder: "Please enter your name",class: "form-control" %>
+</div>
+<div class = "form-group">
+    <%= text_input f, :email, placeholder: "Email (Optional)",class: "form-control" %>
+</div>
+<%= submit "Sign in", class: "btn btn-primary"%>
+<%end%>
