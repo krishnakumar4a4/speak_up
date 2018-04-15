@@ -18,11 +18,19 @@ defmodule SpeakUpWeb.ParticipantController do
         |> put_flash(:error, "Participant name is mandatory")
         |> render("index.html")
       {participantName, participantEmail} ->
-          token = Phoenix.Token.sign(SpeakUpWeb.Endpoint, "H|$|<>V0|@-||E$@|-_", participantName)
-        conn
-        |> put_flash(:info, "You are successfully added as participant")
-        |> put_resp_cookie("participant_cookie", token)
-        |> render "mic.html"
+        token = Phoenix.Token.sign(SpeakUpWeb.Endpoint, "H|$|<>V0|@-||E$@|-_", participantName)
+        case GenServer.call(ModeratorWorker, {:add, token, participantName, participantEmail}) do
+          :exists ->
+            conn
+            |> put_flash(:info, "A person with this name already exists, Provide different name")
+            |> render "index.html"
+          :ok ->
+            conn
+            |> put_flash(:info, "You are successfully added as participant")
+            |> put_resp_cookie("participant_cookie", token)
+            |> assign(:user_token, token)
+            |> render "mic.html"
+        end
     end
   end
 
@@ -30,6 +38,7 @@ defmodule SpeakUpWeb.ParticipantController do
     cookie = conn.cookies["participant_cookie"]
     case Phoenix.Token.verify(SpeakUpWeb.Endpoint, "H|$|<>V0|@-||E$@|-_", cookie, max_age: 86400) do
       {:ok, participantName} ->
+        GenServer.call(ModeratorWorker, {:delete, cookie})
         conn
         |> put_flash(:info, "You are successfully signed out")
         |> delete_resp_cookie("participant_cookie")
@@ -41,8 +50,8 @@ defmodule SpeakUpWeb.ParticipantController do
     end
   end
 
-  def wanna_speak(conn, params) do
-    IO.inspect("I want to speak")
-    render conn, "mic.html"
-  end
+#  def wanna_speak(conn, params) do
+#    IO.inspect("I want to speak")
+#    render conn, "mic.html"
+#  end
 end
