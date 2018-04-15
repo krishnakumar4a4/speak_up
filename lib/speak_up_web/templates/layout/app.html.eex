@@ -8,8 +8,7 @@
     <meta name="author" content="">
 
     <title>Hello SpeakUp!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "
-    /css/app.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
 </head>
 
 <body>
@@ -27,6 +26,11 @@
                 <li>
                     <%= link "Sign in", to: session_path(@conn, :new) %>
                 </li>
+                <li>
+                  <%=if shouldShowParticipantSignup(@conn) do %>
+                    <%= link "Participant SignUp", to: participant_path(@conn, :new) %>
+                  <%end%>
+                </li>
                 <% end %>
             </ul>
         </nav>
@@ -40,12 +44,8 @@
     </main>
 
 </div> <!-- /container -->
-<script src="<%= static_path(@conn, "
-/js/app.js") %>"></script>
-<
-script
-src = "<%= static_path(@conn, " / js / binary.js
-") %>" ></script>
+<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+<script src = "<%= static_path(@conn, "/js/binary.js") %>" ></script>
 <script>
     var myAudio = document.querySelector('audio');
     var recording = true;
@@ -64,7 +64,7 @@ src = "<%= static_path(@conn, " / js / binary.js
     var magResponseOutput = new Float32Array(5);
     var phaseResponseOutput = new Float32Array(5);
 
-    var client = new BinaryClient('wss://192.168.43.210:8443/websocket');
+    var client = new BinaryClient('wss://192.168.31.22:8443/websocket');
     client.on('open', function () {
 
         var clientStream = client.createStream();
