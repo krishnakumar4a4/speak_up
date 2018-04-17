@@ -4,9 +4,13 @@
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/web/endpoint.ex":
 import {Socket} from "phoenix"
+import {connectMic} from "./mic";
+
+const connectMicFunc = connectMic;
+console.log("connectMicFunc",connectMicFunc);
 
 let channel;
-function connect() {
+function connect(connectMicFunc) {
 //We obtain user token using plug in router
     let socket = new Socket("/socket", {params: {token: window.userToken}});
 
@@ -66,42 +70,49 @@ function connect() {
         .receive("error", resp => {
             console.log("Unable to join", resp)
         });
-}
 
-let statusMessages = document.getElementById("status-messages");
-// if(channel !== undefined) {
-//     console.log("channel is not undefined and can receive");
-//     channel.on('wannaspeak', payload => {
-//         console.log("response is ",payload);
-//         let template = document.createElement("div");
-//         template.innerHTML = `<b>${payload.user}</b>: ${payload.status_message}<br>`;
-//         statusMessages.appendChild(template);
-//         statusMessages.scrollTop = statusMessages.scrollHeight;
-//     });
-// }
-const wann_speak = document.getElementById("wanna-speak");
-if(wann_speak !== null){
-    wann_speak.onclick = function () {
-        console.log("clicked on wanna speak",channel);
-        if(channel !== undefined) {
-            channel.push("wannaspeak", {token: window.userToken})
-            channel.on('wannaspeak', payload => {
-                console.log("response is ",payload);
-                let template = document.createElement("div");
-                template.innerHTML = `<b>Organiser says:</b>: ${payload.status_message}<br>`;
-                statusMessages.appendChild(template);
-                statusMessages.scrollTop = statusMessages.scrollHeight;
-            });
+    channel.on('wannaspeak', payload => {
+        console.log("response is ",payload);
+        let messageToBeDisplayed;
+        if(payload.status_code === -1) {
+            messageToBeDisplayed = "You request to speak is under consideration";
+            connectMicFunc(payload.status_message);
+        } else if(payload.status_code === -2) {
+            messageToBeDisplayed = "You can speak now";
+        } else if(payload.status_code === -3) {
+            messageToBeDisplayed = payload.status_message;
+        } else if(payload.status_code === -4){
+            messageToBeDisplayed = payload.status_message;
+        } else if(payload.status_code === -5) {
+            messageToBeDisplayed = payload.status_message;
+        } else {
+            messageToBeDisplayed = "Could not process your request now!!"
         }
-    };
+        let template = document.createElement("div");
+        template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
+        statusMessages.appendChild(template);
+        statusMessages.scrollTop = statusMessages.scrollHeight;
+    });
+    let statusMessages = document.getElementById("status-messages");
+
+    const wann_speak = document.getElementById("wanna-speak");
+    if(wann_speak){
+        wann_speak.onclick = function () {
+            console.log("clicked on wanna speak",channel);
+            if(channel) {
+                channel.push("wannaspeak", {token: window.userToken})
+            }
+        };
+    }
 }
 
 window.addEventListener('load', function() {
-    console.log("Page loaded with ",window.userToken);
+    const userToken = window.userToken;
+    console.log("Page loaded with ",userToken);
 
-    if(window.userToken !== undefined && channel === undefined) {
+    if(userToken && !channel) {
         //Connects, Only if the channel is not created
-        connect();
+        connect(connectMicFunc);
     }
 });
 export default {connect}

@@ -2,7 +2,9 @@ defmodule SpeakUp.ModeratorWorker do
   use GenServer
 
   def start_link(register_name, target) do
-    GenServer.start_link(__MODULE__, target, name: ModeratorWorker)
+    {:ok,pid} = GenServer.start_link(__MODULE__, target, name: ModeratorWorker)
+    :global.register_name(register_name, pid)
+    {:ok,pid}
   end
 
   def init(moderator_name) do
@@ -69,10 +71,23 @@ defmodule SpeakUp.ModeratorWorker do
         {:reply, :donotexist, state}
       [{token, {participantName, participantEmail, nil}}|_] ->
         random_number = :rand.uniform(10000000000)
-        :ets.insert(:participants,{token, {participantName, participantEmail, random_number}})
+        :ets.insert(:participants,{token, {participantName, participantEmail, Integer.to_string(random_number)}})
         {:reply, random_number, state}
       [{token, {participantName, participantEmail, ttt}}|_] ->
         {:reply, :already_requested, state}
+    end
+  end
+
+  def handle_call({:validate_ttt, token, ttt}, _from, state) do
+    tokenString = List.to_string :binary.bin_to_list token
+    tttString = List.to_string :binary.bin_to_list ttt
+    case :ets.lookup(:participants,tokenString) do
+      [] ->
+        {:reply, :donotexist, state}
+      [{tokenString, {participantName, participantEmail, nil}}|_] ->
+        {:reply, :donotexist, state}
+      [{tokenString, {participantName, participantEmail, tttString}}|_] ->
+        {:reply, :ok, state}
     end
   end
 end
