@@ -44,7 +44,7 @@ defmodule SpeakUp.ModeratorWorker do
   def handle_call({:add, token, participantName, participantEmail}, _from, state) do
     case :ets.lookup(:participants,token) do
       [] ->
-        :ets.insert(:participants,{token,{participantName, participantEmail,nil}})
+        :ets.insert(:participants,{token,{participantName, participantEmail,nil,nil,nil,nil}})
         {:reply, :ok, state}
       _ ->
         {:reply, :exists, state}
@@ -65,16 +65,31 @@ defmodule SpeakUp.ModeratorWorker do
     end
   end
 
-  def handle_call({:create_ttt, token}, _from,state) do
+  def handle_call({:create_ttt, token, socket_ref}, {fromPid, tag},state) do
     case :ets.lookup(:participants,token) do
       [] ->
         {:reply, :donotexist, state}
-      [{token, {participantName, participantEmail, nil}}|_] ->
+      [{token, {participantName, participantEmail, nil, _socket_ref, _worker_ref, _fromPid}}|_] ->
         random_number = :rand.uniform(10000000000)
-        :ets.insert(:participants,{token, {participantName, participantEmail, Integer.to_string(random_number)}})
+        {:ok, worker_ref} = SpeakUp.ParticipantWebsocketSupervisor.start_child(%{"socket_ref" => socket_ref, "channel_pid" => fromPid})
+        :ets.insert(:participants,{token, {participantName, participantEmail, Integer.to_string(random_number), socket_ref, worker_ref, fromPid}})
         {:reply, random_number, state}
-      [{token, {participantName, participantEmail, ttt}}|_] ->
+      [{token, {participantName, participantEmail, ttt, _socket_ref, _worker_ref, _fromPid}}|_] ->
         {:reply, :already_requested, state}
+    end
+  end
+
+  def handle_call({:destroy_ttt, token, socket_ref}, {fromPid, tag},state) do
+    case :ets.lookup(:participants,token) do
+      [] ->
+        {:reply, :donotexist, state}
+      [{token, {participantName, participantEmail, nil, _socket_ref, _worker_ref, _fromPid}}|_] ->
+        {:reply, :donotexist, state}
+      [{token, {participantName, participantEmail, ttt, socket_ref, worker_ref, fromPid}}|_] ->
+        :ets.update_element(:participants, token, {2,{participantName, participantEmail, nil, socket_ref, worker_ref, fromPid}})
+        #terminate ws_handler at the speaker side
+        GenServer.call({:global, :moderator}, {:terminate_ws_handler, token, ttt})
+        {:reply, :ok, state}
     end
   end
 
@@ -84,9 +99,10 @@ defmodule SpeakUp.ModeratorWorker do
     case :ets.lookup(:participants,tokenString) do
       [] ->
         {:reply, :donotexist, state}
-      [{tokenString, {participantName, participantEmail, nil}}|_] ->
+      [{tokenString, {participantName, participantEmail, nil, _, _, _}}|_] ->
         {:reply, :donotexist, state}
-      [{tokenString, {participantName, participantEmail, tttString}}|_] ->
+      [{tokenString, {participantName, participantEmail, tttString, _socketRef, workerRef, _channelPid}}|_] ->
+        GenServer.call(workerRef, {:push_message, %{"status_code" => -2, "status_message" => "Speak access granted"}})
         {:reply, :ok, state}
     end
   end

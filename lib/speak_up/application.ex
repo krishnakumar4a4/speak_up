@@ -14,6 +14,8 @@ defmodule SpeakUp.Application do
       supervisor(SpeakUpWeb.Endpoint, []),
       # Start your own worker by calling: SpeakUp.Worker.start_link(arg1, arg2, arg3)
        worker(SpeakUp.ModeratorWorker, [:moderator_worker,:moderator]),
+      # DynamicSupervisor to add websocket workers dynamically
+      supervisor(SpeakUp.ParticipantWebsocketSupervisor,[])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
