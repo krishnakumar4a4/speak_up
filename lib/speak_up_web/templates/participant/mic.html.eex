@@ -6,7 +6,7 @@
 <h1>Tap to speak</h1>
 <br>
   <button id= "wanna-speak">Wanna Speak</button>
-  <%= link "Hang Up", to: participant_path(@conn, :hang_up), class: "btn btn-default"%>
+  <button id= "hang-up">Hang Up</button>
 <input type="range" min="1" max="40">
 <pre></pre>
 <h3>Connection Status</h3>

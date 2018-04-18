@@ -1,6 +1,6 @@
+
 export function connectMic(temporaryTalktoken) {
     console.log("ttt",temporaryTalktoken);
-    var recording = true;
     var pre = document.querySelector('pre');
     var video = document.querySelector('video');
     var range = document.querySelector('input');
@@ -47,15 +47,12 @@ export function connectMic(temporaryTalktoken) {
                     source.connect(biquadFilter);
 
                     var bufferSize = 2048;
-                    recorder = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+                    var recorder = audioCtx.createScriptProcessor(bufferSize, 1, 1);
 
                     recorder.onaudioprocess = function (e) {
-                        console.log("onAudioprocess");
-                        if (!recording) return;
-                        console.log('recording');
+                        if (!clientStream.writable) return;
                         var left = e.inputBuffer.getChannelData(0);
-                        clientStream.write(convertoFloat32ToInt16(left));
-                        console.log("sending", left);
+                        if(clientStream.writable) clientStream.write(convertoFloat32ToInt16(left));
                     };
 
                     biquadFilter.connect(recorder);
