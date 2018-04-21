@@ -11,13 +11,13 @@ defmodule SpeakUpWeb.ParticipantMicChannel do
     {:ok, token} ->
     #socket_ref is used to push messages to socket from other processes
       case GenServer.call(ModeratorWorker,{:create_ttt, token, socket_ref(socket)}) do
-        :cannot_create ->
+        :wait_ttt_issue ->
           #This case is not yet handled
-          push socket, "wannaspeak", %{"status_code" => -3, "status_message" => "You cannot speak now, Please try later!!"}
+          push socket, "wannaspeak", %{"status_code" => -3, "status_message" => "You are on wait list"}
         :donotexist ->
           push socket, "wannaspeak", %{"status_code" => -4, "status_message" => "You are not registered!!"}
         :already_requested ->
-          push socket, "wannaspeak", %{"status_code" => -5, "status_message" => "You previous request is yet to be processed"}
+          push socket, "wannaspeak", %{"status_code" => -5, "status_message" => "Your previous request is yet to be processed"}
         ttt ->
           push socket, "wannaspeak", %{"status_code" => -1, "status_message" => ttt}
       end

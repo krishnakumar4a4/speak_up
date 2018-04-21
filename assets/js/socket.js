@@ -77,11 +77,14 @@ function connect(connectMicFunc) {
         // Process the data
         let messageToBeDisplayed;
         if(payload.status_code === -2) {
-            messageToBeDisplayed = "You can speak now";
+            messageToBeDisplayed = payload.status_message;
             let template = document.createElement("div");
             template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
             statusMessages.appendChild(template);
             statusMessages.scrollTop = statusMessages.scrollHeight;
+        } else if(payload.status_code === -1) {
+            messageToBeDisplayed = "Its your turn now";
+            connectMicFunc(payload.status_message);
         }
     });
     channel.on('wannaspeak', payload => {
@@ -90,11 +93,7 @@ function connect(connectMicFunc) {
         if(payload.status_code === -1) {
             messageToBeDisplayed = "You request to speak is under consideration";
             connectMicFunc(payload.status_message);
-        } else if(payload.status_code === -3) {
-            messageToBeDisplayed = payload.status_message;
-        } else if(payload.status_code === -4){
-            messageToBeDisplayed = payload.status_message;
-        } else if(payload.status_code === -5) {
+        } else if(payload.status_code === -3 || payload.status_code === -4 || payload.status_code === -5) {
             messageToBeDisplayed = payload.status_message;
         } else {
             messageToBeDisplayed = "Could not process your request now!!"

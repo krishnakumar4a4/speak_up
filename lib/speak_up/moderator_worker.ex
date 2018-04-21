@@ -10,7 +10,11 @@ defmodule SpeakUp.ModeratorWorker do
   def init(moderator_name) do
     # For storing participant tokens/cookies
     :ets.new(:participants,[:set, :public, :named_table, read_concurrency: true])
-    {:ok, %{"moderator_name" => moderator_name}}
+    {:ok, %{ "moderator_name" => moderator_name, "request_queue" => :queue.new(),
+      "mode" => 1, # 1 for auto and 2 for manual
+      "type" => 1, # 1 for one by one, 2 for discussion, 3 for time based
+      "live_ttts" => []
+    }}
   end
 
   def handle_call(:get_all, _from, state) do
@@ -65,33 +69,61 @@ defmodule SpeakUp.ModeratorWorker do
     end
   end
 
-  def handle_call({:create_ttt, token, socket_ref}, {fromPid, tag},state) do
+  def handle_call({:create_ttt, token, socket_ref}, {fromPid, _tag},state) do
     case :ets.lookup(:participants,token) do
       [] ->
         {:reply, :donotexist, state}
-      [{token, {participantName, participantEmail, nil, _socket_ref, _worker_ref, _fromPid}}|_] ->
-        random_number = :rand.uniform(10000000000)
-        {:ok, worker_ref} = SpeakUp.ParticipantWebsocketSupervisor.start_child(%{"socket_ref" => socket_ref, "channel_pid" => fromPid})
-        :ets.insert(:participants,{token, {participantName, participantEmail, Integer.to_string(random_number), socket_ref, worker_ref, fromPid}})
-        {:reply, random_number, state}
-      [{token, {participantName, participantEmail, ttt, _socket_ref, _worker_ref, _fromPid}}|_] ->
+      [{^token, {participantName, participantEmail, nil, _socket_ref, _worker_ref, _fromPid}}|_] ->
+      # Control the flow of issuing ttt's here
+        case control_ttt_flow(state, token) do
+          {:issue_ttt, state} ->
+            ttt = create_ttt()
+            store_ttt(socket_ref, fromPid, token, participantName, participantEmail, ttt)
+            {:reply, ttt, add_to_live_ttts(state, token, ttt)}
+          {:wait_ttt_issue, updatedState} ->
+            store_ttt(socket_ref, fromPid, token, participantName, participantEmail, nil)
+            {:reply, :wait_ttt_issue, updatedState}
+        end
+      [{_token, {_participantName, _participantEmail, _ttt, _socket_ref, _worker_ref, _fromPid}}|_] ->
         {:reply, :already_requested, state}
     end
   end
 
-  def handle_call({:destroy_ttt, token, socket_ref}, {fromPid, tag},state) do
+  #Call this when participant hung up(Participant -> Speaker)
+  def handle_call({:destroy_ttt, token, _socket_ref}, {_fromPid, _tag},state) do
+    #Clean up ParticipantWebsocketWorker too
     case :ets.lookup(:participants,token) do
       [] ->
         {:reply, :donotexist, state}
-      [{token, {participantName, participantEmail, nil, _socket_ref, _worker_ref, _fromPid}}|_] ->
+      [{_token, {_participantName, _participantEmail, nil, _socket_ref, _worker_ref, _fromPid}}|_] ->
         {:reply, :donotexist, state}
       [{token, {participantName, participantEmail, ttt, socket_ref, worker_ref, fromPid}}|_] ->
+        IO.puts("Destroying ttt")
         :ets.update_element(:participants, token, {2,{participantName, participantEmail, nil, socket_ref, worker_ref, fromPid}})
         #terminate ws_handler at the speaker side
         GenServer.call({:global, :moderator}, {:terminate_ws_handler, token, ttt})
+        #Removing from live_ttts and then give chance to next participant
+        newState = issue_next_ttt(remove_from_live_ttts(state,token,ttt))
+        {:reply, :ok, newState}
+    end
+  end
+
+  # Call this when moderator has unregistered event (Speaker -> Participant)
+  def handle_call({:unregister_destroy_ttt, token, ttt}, {_fromPid, _tag},state) do
+    IO.puts("unregister_destroy_ttt case")
+    case :ets.match_object(:participants,{token, {'_','_',ttt,'_','_','_'}}) do
+      [] ->
+        {:reply, :donotexist, state}
+      [{_token, {_participantName, _participantEmail, nil, _socket_ref, _worker_ref, _fromPid}}|_] ->
+        {:reply, :already_unregistered, state}
+      [{token, {participantName, participantEmail, _ttt, socket_ref, worker_ref, fromPid}}|_] ->
+        IO.puts("Special unregistering case, connection is made and timedout")
+        GenServer.call(worker_ref, {:push_message, %{"status_code" => -2, "status_message" => "Connection terminated, Try again if you wish to speak"}})
+        :ets.update_element(:participants, token, {2,{participantName, participantEmail, nil, socket_ref, worker_ref, fromPid}})
         {:reply, :ok, state}
     end
   end
+
 
   def handle_call({:validate_ttt, token, ttt}, _from, state) do
     tokenString = List.to_string :binary.bin_to_list token
@@ -99,11 +131,91 @@ defmodule SpeakUp.ModeratorWorker do
     case :ets.lookup(:participants,tokenString) do
       [] ->
         {:reply, :donotexist, state}
-      [{tokenString, {participantName, participantEmail, nil, _, _, _}}|_] ->
+      [{^tokenString, {_participantName, _participantEmail, nil, _, _, _}}|_] ->
         {:reply, :donotexist, state}
-      [{tokenString, {participantName, participantEmail, tttString, _socketRef, workerRef, _channelPid}}|_] ->
+      [{^tokenString, {_participantName, _participantEmail, tttString, _socketRef, workerRef, _channelPid}}|_] ->
         GenServer.call(workerRef, {:push_message, %{"status_code" => -2, "status_message" => "Speak access granted"}})
         {:reply, :ok, state}
+    end
+  end
+
+  defp control_ttt_flow(state, token) do
+    requestQueue = Map.get(state, "request_queue")
+
+    case decide_ttt_issue(state) do
+      :issue_ttt ->
+        {:issue_ttt, state}
+      :wait_ttt_issue ->
+        {:wait_ttt_issue, %{state|"request_queue" => :queue.in(token,requestQueue)}}
+    end
+  end
+
+  defp add_to_live_ttts(state, token, ttt) do
+    liveTTTs = Map.get(state,"live_ttts")
+    %{state|"live_ttts" => [{token,ttt}|liveTTTs]}
+  end
+
+  defp remove_from_live_ttts(state, token, ttt) do
+    liveTTTs = Map.get(state,"live_ttts")
+    %{state|"live_ttts" => (for {eachToken,eachTTT} <- liveTTTs, token !== eachToken, ttt !== eachTTT, do: {eachToken,eachTTT})}
+  end
+
+  defp issue_next_ttt(state) do
+    requestQueue = Map.get(state, "request_queue")
+    liveTTTs = Map.get(state, "live_ttts")
+    cond do
+      length(liveTTTs)>0 ->
+        state
+      length(liveTTTs) == 0 && :queue.len(requestQueue) > 0 ->
+        {{:value, token}, requestQueueRem} = :queue.out_r(requestQueue)
+        case :ets.lookup(:participants, token) do
+          [] ->
+            # How to handle log out of participant in queue
+            IO.puts("Participant might have logged out already")
+            %{state|"request_queue" => requestQueueRem}
+          [{^token, {participantName, participantEmail, nil, socketRef, workerRef, fromPid}}|_] ->
+            ttt = create_ttt()
+            GenServer.call(workerRef, {:push_message, %{"status_code" => -1, "status_message" => ttt}})
+            updatedState = add_to_live_ttts(state, token, ttt)
+            :ets.update_element(:participants, token, {2,{participantName, participantEmail, Integer.to_string(ttt), socketRef, workerRef, fromPid}})
+            %{updatedState|"request_queue" => requestQueueRem}
+          [{^token, {_participantName, _participantEmail, _ttt, _socketRef, _workerRef, _fromPid}}|_] ->
+            # Participant already has an existing ttt, how to handle this, probably hangup is not clicked
+            IO.puts("Weird, participant already has ttt, but still in queue")
+            %{state|"request_queue" => requestQueueRem}
+        end
+      true ->
+        state
+    end
+  end
+
+  defp create_ttt() do
+    :rand.uniform(10000000000)
+  end
+
+  defp store_ttt(socketRef, fromPid, token, participantName, participantEmail, ttt) do
+    case ttt do
+      nil ->
+        {:ok, workerRef} = SpeakUp.ParticipantWebsocketSupervisor.start_child(%{"socket_ref" => socketRef, "channel_pid" => fromPid})
+        :ets.insert(:participants,{token, {participantName, participantEmail, nil, socketRef, workerRef, fromPid}})
+      ttt ->
+        {:ok, workerRef} = SpeakUp.ParticipantWebsocketSupervisor.start_child(%{"socket_ref" => socketRef, "channel_pid" => fromPid})
+        :ets.insert(:participants,{token, {participantName, participantEmail, Integer.to_string(ttt), socketRef, workerRef, fromPid}})
+    end
+  end
+
+  defp decide_ttt_issue(state) do
+    mode = Map.get(state, "mode")
+    type = Map.get(state, "type")
+    liveTTTsLength = length(Map.get(state, "live_ttts"))
+    case {mode, type} do
+      {1, 1} when liveTTTsLength == 0 ->
+        :issue_ttt
+      {1, 1} when liveTTTsLength > 0 ->
+        :wait_ttt_issue
+      _ ->
+        IO.puts("Other request mode and type")
+        :issue_ttt
     end
   end
 end
