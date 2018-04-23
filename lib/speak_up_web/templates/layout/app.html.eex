@@ -16,9 +16,9 @@
     <header class="header">
         <nav role="navigation">
             <ul class="nav nav-pills pull-right">
-                <%= if @current_user do %>
-                <li><%= @current_user.email %> (<%= @current_user.id %>)</li>
-                <li><%= link "Sign out", to: session_path(@conn, :delete, @current_user), method: "delete" %></li>
+                <%= if @user do %>
+                <li><%= Map.get(@user,"email") %></li>
+                <li><%= link "Sign out", to: session_path(@conn, :delete, Map.get(@user,"current_user")), method: "delete" %></li>
                 <% else %>
                 <li>
                     <%= link "Register", to: user_path(@conn, :new) %>

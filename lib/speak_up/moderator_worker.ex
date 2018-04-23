@@ -18,31 +18,31 @@ defmodule SpeakUp.ModeratorWorker do
   end
 
   def handle_call(:get_all, _from, state) do
-    participants = GenServer.call({:global, :moderator}, :registered)
-    ids = Enum.map(participants, &({elem(&1, 2),elem(&1, 3)}))
-    IO.inspect(ids)
-    {:reply, ids, state}
+    participants = :ets.tab2list(:participants)
+    participantDetails = Enum.map(participants, &(elem(&1, 1)))
+    IO.inspect(participantDetails)
+    {:reply, participantDetails, state}
   end
-
-  def handle_call({:mute,id}, _from, state) do
-    case  GenServer.call({:global, :moderator}, {:mute, id}) do
-       :ok ->
-         {:reply, :ok, state}
-         _ ->
-          IO.puts("Cannot mute")
-          {:reply, :error, state}
-        end
-  end
-
-  def handle_call({:can_speak, id}, _from, state) do
-    case GenServer.call({:global, :moderator}, {:can_speak, id}) do
-       :ok ->
-         {:reply, :ok , state}
-         _ ->
-           IO.puts("Cannot speak")
-           {:reply, :error, state}
-        end
-  end
+#
+#  def handle_call({:mute,id}, _from, state) do
+#    case  GenServer.call({:global, :moderator}, {:mute, id}) do
+#       :ok ->
+#         {:reply, :ok, state}
+#         _ ->
+#          IO.puts("Cannot mute")
+#          {:reply, :error, state}
+#        end
+#  end
+#
+#  def handle_call({:can_speak, id}, _from, state) do
+#    case GenServer.call({:global, :moderator}, {:can_speak, id}) do
+#       :ok ->
+#         {:reply, :ok , state}
+#         _ ->
+#           IO.puts("Cannot speak")
+#           {:reply, :error, state}
+#        end
+#  end
 
   # Below, participant login related calls
   def handle_call({:add, token, participantName, participantEmail}, _from, state) do
@@ -56,8 +56,11 @@ defmodule SpeakUp.ModeratorWorker do
   end
 
   def handle_call({:delete, token}, _from, state) do
+    #During participant signout
     :ets.delete(:participants, token)
-    {:reply, :ok, state}
+    upState = remove_from_live_ttts(state,token)
+    upState2 = remove_from_request_queue(upState,token)
+    {:reply, :ok, upState2}
   end
 
   def handle_call({:get,token}, _from, state) do
@@ -133,7 +136,7 @@ defmodule SpeakUp.ModeratorWorker do
         {:reply, :donotexist, state}
       [{^tokenString, {_participantName, _participantEmail, nil, _, _, _}}|_] ->
         {:reply, :donotexist, state}
-      [{^tokenString, {_participantName, _participantEmail, tttString, _socketRef, workerRef, _channelPid}}|_] ->
+      [{^tokenString, {_participantName, _participantEmail, ^tttString, _socketRef, workerRef, _channelPid}}|_] ->
         GenServer.call(workerRef, {:push_message, %{"status_code" => -2, "status_message" => "Speak access granted"}})
         {:reply, :ok, state}
     end
@@ -158,6 +161,17 @@ defmodule SpeakUp.ModeratorWorker do
   defp remove_from_live_ttts(state, token, ttt) do
     liveTTTs = Map.get(state,"live_ttts")
     %{state|"live_ttts" => (for {eachToken,eachTTT} <- liveTTTs, token !== eachToken, ttt !== eachTTT, do: {eachToken,eachTTT})}
+  end
+
+  defp remove_from_live_ttts(state, token) do
+    liveTTTs = Map.get(state,"live_ttts")
+    %{state|"live_ttts" => (for {eachToken,eachTTT} <- liveTTTs, token !== eachToken, do: {eachToken,eachTTT})}
+  end
+
+  defp remove_from_request_queue(state, token) do
+    requestQueue = Map.get(state, "request_queue")
+    updateRequestQueue = :queue.filter(fn {eachToken,_ttt} -> token !== eachToken end, requestQueue)
+    %{state|"request_queue" => updateRequestQueue}
   end
 
   defp issue_next_ttt(state) do

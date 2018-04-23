@@ -2,7 +2,7 @@ defmodule SpeakUpWeb.ModeratorController do
   use SpeakUpWeb, :controller
 
   def index(conn, _params) do
-    IO.puts("Loading participant view")
+    IO.puts("Loading moderator view")
     render conn, "index.html"
   end
 
