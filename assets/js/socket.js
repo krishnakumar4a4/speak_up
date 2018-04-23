@@ -9,6 +9,7 @@ import {connectMic} from "./mic";
 const connectMicFunc = connectMic;
 
 let channel;
+let moderatorChannel;
 function connect(connectMicFunc) {
 //We obtain user token using plug in router
     let socket = new Socket("/socket", {params: {token: window.userToken}});
@@ -141,13 +142,47 @@ function connect(connectMicFunc) {
     }
 }
 
+
+function connectModerator(moderatorEmail) {
+    let socket = new Socket("/socket", {
+        params: {
+            moderatorEmail: moderatorEmail,
+            moderatorToken: moderatorToken
+        }});
+    socket.connect();
+
+    console.log("connected to moderator control");
+// Now that you are connected, you can join channels with a topic:
+    moderatorChannel = socket.channel("moderator:control", {});
+    moderatorChannel.join()
+        .receive("ok", resp => {
+            console.log("Joined moderator control successfully", resp)
+        })
+        .receive("error", resp => {
+            console.log("Unable to join moderator control", resp)
+        });
+
+    let moderatorControlView = document.getElementById("moderator-control-view");
+
+    moderatorChannel.on('change', payload => {
+        console.log("change payload is ",payload);
+        if(payload.status_code === -1) {
+            console.log("Got events", payload);
+        }
+     });
+}
+
 window.addEventListener('load', function() {
     const userToken = window.userToken;
-    console.log("Page loaded with ",userToken);
+    const moderatorEmail = window.moderatorEmail;
+    const moderatorToken = window.moderatorToken;
+    console.log("Page loaded with ",userToken, moderatorEmail, moderatorToken);
 
     if(userToken && !channel) {
         //Connects, Only if the channel is not created
         connect(connectMicFunc);
+    } else if(moderatorEmail && !moderatorChannel) {
+        connectModerator(moderatorEmail)
     }
 });
 export default {connect}

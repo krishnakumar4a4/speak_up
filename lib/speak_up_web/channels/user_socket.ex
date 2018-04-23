@@ -3,6 +3,7 @@ defmodule SpeakUpWeb.UserSocket do
 
   ## Channels
    channel "participant:*", SpeakUpWeb.ParticipantMicChannel
+   channel "moderator:*", SpeakUpWeb.ModeratorChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -20,16 +21,31 @@ defmodule SpeakUpWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(params, socket) do
+    IO.inspect(params)
+    IO.inspect(socket)
     case Map.fetch(params, "token") do
       {:ok, token} ->
+      #Participant login check
         case GenServer.call(ModeratorWorker, {:get, token}) do
           :ok ->
             {:ok, socket}
           :donotexist ->
-              :error
+            :error
         end
         :error ->
-          :error
+          #Could be moderator login, verify that
+          case {Map.get(params, "moderatorToken"),Map.get(params, "moderatorEmail")} do
+            {nil,nil} ->
+              :error
+            {moderatorToken, moderatorEmail} ->
+              case Phoenix.Token.verify(SpeakUpWeb.Endpoint, "H|$|<>V0|@-||E$@|-_", moderatorToken, max_age: 86400) do
+                {:ok, ^moderatorEmail} ->
+                  {:ok, socket}
+                {:error, e} ->
+                  :error
+              end
+              {:ok, socket}
+          end
     end
   end
 

@@ -1,9 +1,14 @@
-<%= if @current_user do %>
+<%= if @user do %>
 <%= form_for @conn, moderator_path(@conn, :switch_control), [as: :switch], fn f ->%>
-<%= radio_button f, :mode, :one_by_one, checked: false%> one-by-one
-<%= radio_button f, :mode, :discussion, checked: true%> Discussion
+<%= radio_button f, :mode, :auto, checked: true%> auto
+<%= radio_button f, :mode, :manual, checked: false%> manual
+
+<%= radio_button f, :type, :one_by_one, checked: true%> one-by-one
+<%= radio_button f, :type, :discussion, checked: false%> Discussion
 <%= submit "Submit", class: "btn btn-primary"%>
 <% end %>
+<script>window.moderatorToken = "<%= Map.get(@user,"token") %>"</script>
+<script>window.moderatorEmail = "<%= Map.get(@user,"email") %>"</script>
 <h3>Connected people</h3>
 <table class="table">
     <thead>
@@ -15,15 +20,16 @@
     </tr>
     </thead>
     <tbody>
-    <%= for {key,state} <- connected_people @conn do %>
+    <div id="moderator-control-view"/>
+    <%= for {pName,pEmail,t1,t2,t3,t4} <- connected_people @conn do %>
     <tr>
-        <td><%=key%></td>
-        <td>test</td>
-        <td><%=link "Mute",to: moderator_path(@conn, :mute, key), class: "btn btn-default
-            btn-xs"<>btn_state_danger(state)%>
+        <td><%=pName%></td>
+        <td>pEmail</td>
+        <td><%=link "Mute",to: moderator_path(@conn, :mute, pEmail), class: "btn btn-default
+            btn-xs"<>btn_state_danger(pName)%>
         </td>
-        <td><%=link "Can Speak",to: moderator_path(@conn, :can_speak, key), class: "btn btn-default
-            btn-xs"<>btn_state_success(state)%>
+        <td><%=link "Can Speak",to: moderator_path(@conn, :can_speak, pEmail), class: "btn btn-default
+            btn-xs"<>btn_state_success(pName)%>
         </td>
     </tr>
     <% end %>

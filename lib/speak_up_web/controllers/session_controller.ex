@@ -23,10 +23,10 @@ defmodule SpeakUpWeb.SessionController do
     end
   end
 
-  defp login(conn, user) do
-    conn
-    |> Guardian.Plug.sign_in(user)
-  end
+#  defp login(conn, user) do
+#    conn
+#    |> Guardian.Plug.sign_in(user)
+#  end
 
   def delete(conn, _) do
     conn
