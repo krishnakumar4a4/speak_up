@@ -162,12 +162,45 @@ function connectModerator(moderatorEmail) {
             console.log("Unable to join moderator control", resp)
         });
 
-    let moderatorControlView = document.getElementById("moderator-control-view");
+    //Registering moderator
+    moderatorChannel.push("register",{
+        params: {
+            moderatorEmail: moderatorEmail,
+            moderatorToken: moderatorToken
+        }});
 
-    moderatorChannel.on('change', payload => {
-        console.log("change payload is ",payload);
-        if(payload.status_code === -1) {
-            console.log("Got events", payload);
+    let moderatorControlView = document.getElementById("table-body");
+    moderatorChannel.on('phx_reply', data => {
+        console.log("change payload is ",data.response);
+        if(data.response.status_code === -10) {
+            console.log("Got events", data.response);
+            let pName = data.response.participants[0].pName;
+            // let pEmail = data.response.pEmail;
+            let participants = data.response.participants;
+            for(let i=0; i<data.response.participants.length; i++) {
+                let rowNode = document.createElement("tr");
+                let nameNode = document.createElement("td");
+                let nameText = document.createTextNode(participants[i].pName);
+                nameNode.appendChild(nameText);
+                rowNode.appendChild(nameNode);
+                let emailNode = document.createElement("td");
+                let emailText = document.createTextNode(participants[i].pEmail);
+                emailNode.appendChild(emailText);
+                rowNode.appendChild(emailNode);
+
+                let speechControl = document.createElement("button");
+                let micIcon = document.createElement("i");
+                let attr = document.createAttribute("class");
+                attr.value = "fa fa-microphone";
+                micIcon.setAttributeNode(attr);
+                speechControl.appendChild(micIcon);
+                speechControl.onclick = function () {
+                    console.log("clicked speechControl");
+                };
+                rowNode.appendChild(speechControl);
+                moderatorControlView.appendChild(rowNode);
+            }
+
         }
      });
 }
