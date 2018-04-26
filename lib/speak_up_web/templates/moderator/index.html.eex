@@ -13,26 +13,12 @@
 <table class="table">
     <thead>
     <tr>
-        <th>id</th>
         <th>Name</th>
-        <th>Mute</th>
-        <th>Can speak</th>
+        <th>Email</th>
+        <th>Control</th>
     </tr>
     </thead>
-    <tbody>
-    <div id="moderator-control-view"/>
-    <%= for {pName,pEmail,t1,t2,t3,t4} <- connected_people @conn do %>
-    <tr>
-        <td><%=pName%></td>
-        <td>pEmail</td>
-        <td><%=link "Mute",to: moderator_path(@conn, :mute, pEmail), class: "btn btn-default
-            btn-xs"<>btn_state_danger(pName)%>
-        </td>
-        <td><%=link "Can Speak",to: moderator_path(@conn, :can_speak, pEmail), class: "btn btn-default
-            btn-xs"<>btn_state_success(pName)%>
-        </td>
-    </tr>
-    <% end %>
+    <tbody id="table-body">
     </tbody>
 </table>
 <% end %>
