@@ -20,6 +20,7 @@ defmodule SpeakUp.ModeratorWorker do
 
   def handle_call({:register_moderator_channel_sockets, moderatorChannelPid, socketRef}, _from, state) do
     upState = %{state | "moderator_channels" => MapSet.put(Map.get(state,"moderator_channels"),{moderatorChannelPid,socketRef})}
+    broad_cast_participants_to_moderators(upState)
     {:reply, :ok, upState}
   end
 
@@ -56,9 +57,7 @@ defmodule SpeakUp.ModeratorWorker do
       [] ->
         :ets.insert(:participants,{token,{participantName, participantEmail,nil,nil,nil,nil}})
         #update moderator view when participant added
-        participants = for {t,{pName, pEmail,_,_,_,_}} <- :ets.tab2list(:participants), do: %{"token" => t, "pName" => pName, "pEmail" => pEmail}
-        msg = %{"status_code" => -10, "participants" => participants}
-        for {mChannelPid, socketRef} <- MapSet.to_list(Map.get(state, "moderator_channels")), do: (send mChannelPid, {:push_message, msg, socketRef})
+        broad_cast_participants_to_moderators(state)
         {:reply, :ok, state}
       _ ->
         {:reply, :exists, state}
@@ -70,7 +69,34 @@ defmodule SpeakUp.ModeratorWorker do
     :ets.delete(:participants, token)
     upState = remove_from_live_ttts(state,token)
     upState2 = remove_from_request_queue(upState,token)
+    #update moderator view when participant signs out
+    broad_cast_participants_to_moderators(upState2)
     {:reply, :ok, upState2}
+  end
+
+  def handle_call({:update_channel_details, token, socket}, fromPid, state) do
+    case :ets.lookup(:participants, token) do
+      [] ->
+        {:reply, :ok, state}
+      [{^token,{pName,pEmail,ttt,sockeRef,workerRef,_fPid}}|_] ->
+        :ets.update_element(:participants, token, {2,{pName, pEmail, ttt, sockeRef, workerRef, fromPid}})
+        {:reply, :ok,state}
+    end
+  end
+
+  def handle_call({:socket_terminate, socket}, fromPid, state) do
+    transportPid = Map.get(socket,:transport_pid)
+    #When the browser is closed, token should be cleared up
+    case Enum.filter(:ets.tab2list(:participants),fn ({_,{_,_,_,_,_,fPid}}) -> elem(fPid,0) == elem(fromPid,0) end) do
+       [] ->
+         broad_cast_participants_to_moderators(state)
+         {:reply,:ok,state}
+       [{token,_}] ->
+         :ets.delete(:participants,token)
+         broad_cast_participants_to_moderators(state)
+         upState = remove_from_request_queue(remove_from_live_ttts(state,token),token)
+         {:reply,:ok,upState}
+    end
   end
 
   def handle_call({:get,token}, _from, state) do
@@ -82,7 +108,7 @@ defmodule SpeakUp.ModeratorWorker do
     end
   end
 
-  def handle_call({:create_ttt, token, socket_ref}, {fromPid, _tag},state) do
+  def handle_call({:create_ttt, token, socket_ref}, fromPid,state) do
     case :ets.lookup(:participants,token) do
       [] ->
         {:reply, :donotexist, state}
@@ -92,6 +118,8 @@ defmodule SpeakUp.ModeratorWorker do
           {:issue_ttt, state} ->
             ttt = create_ttt()
             store_ttt(socket_ref, fromPid, token, participantName, participantEmail, ttt)
+            #update moderator view when participant wanted to speak
+            broad_cast_participants_to_moderators(state)
             {:reply, ttt, add_to_live_ttts(state, token, ttt)}
           {:wait_ttt_issue, updatedState} ->
             store_ttt(socket_ref, fromPid, token, participantName, participantEmail, nil)
@@ -117,6 +145,8 @@ defmodule SpeakUp.ModeratorWorker do
         GenServer.call({:global, :moderator}, {:terminate_ws_handler, token, ttt})
         #Removing from live_ttts and then give chance to next participant
         newState = issue_next_ttt(remove_from_live_ttts(state,token,ttt))
+        #update moderator view when participant hangsout
+        broad_cast_participants_to_moderators(newState)
         {:reply, :ok, newState}
     end
   end
@@ -241,5 +271,12 @@ defmodule SpeakUp.ModeratorWorker do
         IO.puts("Other request mode and type")
         :issue_ttt
     end
+  end
+
+  defp broad_cast_participants_to_moderators(state) do
+    #update moderator view when participant added/removed etc
+    participants = for {t,{pName, pEmail,ttt,_,_,_}} <- :ets.tab2list(:participants), do: %{"token" => t, "pName" => pName, "pEmail" => pEmail, "ttt" => ttt}
+    msg = %{"status_code" => -10, "participants" => participants}
+    for {mChannelPid, socketRef} <- MapSet.to_list(Map.get(state, "moderator_channels")), do: (send mChannelPid, {:push_message, msg, socketRef})
   end
 end

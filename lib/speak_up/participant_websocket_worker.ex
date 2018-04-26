@@ -14,7 +14,7 @@ defmodule SpeakUp.ParticipantWebsocketWorker do
     IO.puts("pushing message to websocket worker")
     channelPid = Map.get(state,"channel_pid")
     socketRef = Map.get(state,"socket_ref")
-    send channelPid, {:push_message, message, socketRef}
+    send elem(channelPid,0), {:push_message, message, socketRef}
     {:reply, :ok, state}
   end
 end
