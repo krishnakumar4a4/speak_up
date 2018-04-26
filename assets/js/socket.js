@@ -66,6 +66,7 @@ function connect(connectMicFunc) {
     channel.join()
         .receive("ok", resp => {
             console.log("Joined successfully", resp)
+            channel.push("start",{token: window.userToken});
         })
         .receive("error", resp => {
             console.log("Unable to join", resp)
@@ -85,7 +86,17 @@ function connect(connectMicFunc) {
             statusMessages.scrollTop = statusMessages.scrollHeight;
         } else if(payload.status_code === -1) {
             messageToBeDisplayed = "Its your turn now";
+            let template = document.createElement("div");
+            template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
+            statusMessages.appendChild(template);
+            statusMessages.scrollTop = statusMessages.scrollHeight;
             connectMicFunc(payload.status_message);
+        } else if(payload.status_code === -6) {
+            messageToBeDisplayed = payload.status_message;
+            let template = document.createElement("div");
+            template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
+            statusMessages.appendChild(template);
+            statusMessages.scrollTop = statusMessages.scrollHeight;
         }
     });
     channel.on('wannaspeak', payload => {
@@ -169,14 +180,23 @@ function connectModerator(moderatorEmail) {
             moderatorToken: moderatorToken
         }});
 
-    let moderatorControlView = document.getElementById("table-body");
     moderatorChannel.on('phx_reply', data => {
+        //Reset the table view
+        let moderatorControlView = document.getElementById("table-body");
+        let newModeratorControlView = document.createElement("tbody");
+        let newModeratorControlViewAttr = document.createAttribute("id");
+        newModeratorControlViewAttr.value = "table-body";
+        newModeratorControlView.setAttributeNode(newModeratorControlViewAttr);
+        let parentTableNode = moderatorControlView.parentNode;
+        parentTableNode.removeChild(moderatorControlView);
+        parentTableNode.appendChild(newModeratorControlView);
+        moderatorControlView = document.getElementById("table-body");
+
         console.log("change payload is ",data.response);
         if(data.response.status_code === -10) {
             console.log("Got events", data.response);
-            let pName = data.response.participants[0].pName;
-            // let pEmail = data.response.pEmail;
             let participants = data.response.participants;
+            //Have to remove all the children before we add new
             for(let i=0; i<data.response.participants.length; i++) {
                 let rowNode = document.createElement("tr");
                 let nameNode = document.createElement("td");
@@ -188,19 +208,28 @@ function connectModerator(moderatorEmail) {
                 emailNode.appendChild(emailText);
                 rowNode.appendChild(emailNode);
 
+                let speechStatus = participants[i].ttt;
                 let speechControl = document.createElement("button");
                 let micIcon = document.createElement("i");
-                let attr = document.createAttribute("class");
-                attr.value = "fa fa-microphone";
-                micIcon.setAttributeNode(attr);
+                let micAttr = document.createAttribute("class");
+                let buttonAttr = document.createAttribute("class");
+                if (speechStatus) {
+                    buttonAttr.value = "btn btn-success";
+                    micAttr.value = "fa fa-microphone";
+                    speechControl.onclick = function () {
+                        console.log("clicked speechControl");
+                        moderatorChannel.push("mute",{token: participants[i].token})
+                    };
+                } else {
+                    buttonAttr.value = "btn btn-danger";
+                    micAttr.value = "fa fa-microphone-slash";
+                }
+                micIcon.setAttributeNode(micAttr);
+                speechControl.setAttributeNode(buttonAttr);
                 speechControl.appendChild(micIcon);
-                speechControl.onclick = function () {
-                    console.log("clicked speechControl");
-                };
                 rowNode.appendChild(speechControl);
                 moderatorControlView.appendChild(rowNode);
             }
-
         }
      });
 }

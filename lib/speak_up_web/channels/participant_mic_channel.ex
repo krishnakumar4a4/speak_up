@@ -4,8 +4,21 @@ defmodule SpeakUpWeb.ParticipantMicChannel do
     {:ok, socket}
   end
 
+  def handle_in("start", payload, socket) do
+    IO.inspect("started participant mic channel")
+    IO.inspect(payload)
+    case Map.fetch(payload, "token") do
+      {:ok, token} ->
+        GenServer.call(ModeratorWorker,{:update_channel_details, token, socket})
+        {:noreply, socket}
+      :error ->
+        {:stop, "No token",socket}
+    end
+  end
+
   def handle_in("wannaspeak", payload, socket) do
     IO.inspect(payload)
+    IO.inspect(self)
     IO.puts("Got wanna speak event")
     case Map.fetch(payload, "token") do
     {:ok, token} ->
@@ -18,6 +31,8 @@ defmodule SpeakUpWeb.ParticipantMicChannel do
         :already_requested ->
           push socket, "wannaspeak", %{"status_code" => -5, "status_message" => "Your previous request is yet to be processed"}
         ttt ->
+          IO.inspect("socketref")
+          IO.inspect(socket_ref(socket))
           push socket, "wannaspeak", %{"status_code" => -1, "status_message" => ttt}
       end
       :error ->
@@ -48,5 +63,13 @@ defmodule SpeakUpWeb.ParticipantMicChannel do
     IO.puts("pushing to socketref")
     reply(socketRef, {:ok, message})
     {:noreply, socket}
+  end
+
+  def terminate(msg, socket) do
+    IO.puts("channel shutdown event")
+    IO.inspect("socketref")
+    IO.inspect(socket)
+    GenServer.call(ModeratorWorker,{:socket_terminate,socket})
+    {:shutdown, :closed}
   end
 end

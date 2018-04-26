@@ -11,6 +11,18 @@ defmodule SpeakUpWeb.ModeratorChannel do
     {:noreply, socket}
   end
 
+  def handle_in("mute", payload, socket) do
+    token = Map.get(payload,"token")
+    GenServer.call(ModeratorWorker, {:destroy_ttt, token, socket_ref(socket)})
+    case :ets.lookup(:participants, token) do
+      [] ->
+        :ok
+      [{^token,{_,_,_,_,workerRef,_}}] ->
+        GenServer.call(workerRef, {:push_message, %{"status_code" => -6, "status_message" => "You are muted by the organizer"}})
+    end
+    {:noreply, socket}
+  end
+
   def handle_info({:push_message, message, socketRef}, socket) do
     IO.puts("pushing to socketref from moderator")
     reply(socketRef, {:ok, message})
