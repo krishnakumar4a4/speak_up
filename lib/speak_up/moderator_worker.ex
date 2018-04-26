@@ -13,8 +13,14 @@ defmodule SpeakUp.ModeratorWorker do
     {:ok, %{ "moderator_name" => moderator_name, "request_queue" => :queue.new(),
       "mode" => 1, # 1 for auto and 2 for manual
       "type" => 1, # 1 for one by one, 2 for discussion, 3 for time based
-      "live_ttts" => []
+      "live_ttts" => [],
+      "moderator_channels" => MapSet.new()
     }}
+  end
+
+  def handle_call({:register_moderator_channel_sockets, moderatorChannelPid, socketRef}, _from, state) do
+    upState = %{state | "moderator_channels" => MapSet.put(Map.get(state,"moderator_channels"),{moderatorChannelPid,socketRef})}
+    {:reply, :ok, upState}
   end
 
   def handle_call(:get_all, _from, state) do
@@ -49,6 +55,10 @@ defmodule SpeakUp.ModeratorWorker do
     case :ets.lookup(:participants,token) do
       [] ->
         :ets.insert(:participants,{token,{participantName, participantEmail,nil,nil,nil,nil}})
+        #update moderator view when participant added
+        participants = for {t,{pName, pEmail,_,_,_,_}} <- :ets.tab2list(:participants), do: %{"token" => t, "pName" => pName, "pEmail" => pEmail}
+        msg = %{"status_code" => -10, "participants" => participants}
+        for {mChannelPid, socketRef} <- MapSet.to_list(Map.get(state, "moderator_channels")), do: (send mChannelPid, {:push_message, msg, socketRef})
         {:reply, :ok, state}
       _ ->
         {:reply, :exists, state}
