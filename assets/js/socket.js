@@ -10,54 +10,130 @@ const connectMicFunc = connectMic;
 
 let channel;
 let moderatorChannel;
+
+function addWannaSpeakIcon() {
+    let parentNode = document.getElementById("participant-mic-position");
+    let participantMicIconsHolder = document.getElementById("participant-mic-icons");
+    if(participantMicIconsHolder) parentNode.removeChild(participantMicIconsHolder);
+    participantMicIconsHolder = document.createElement("div");
+    let attr = document.createAttribute("id");
+    attr.value = "participant-mic-icons";
+    participantMicIconsHolder.setAttributeNode(attr);
+
+    let faBorder = document.createElement("div");
+    let borderAttr = document.createAttribute("id");
+    borderAttr.value = "wanna-speak-border";
+    let faIcon = document.createElement("i");
+    let faAttr1 = document.createAttribute("class");
+    faAttr1.value = "fa fa-microphone";
+    let faAttr2 = document.createAttribute("id");
+    faAttr2.value = "wanna-speak";
+    faIcon.setAttributeNode(faAttr1);
+    faIcon.setAttributeNode(faAttr2);
+    faBorder.setAttributeNode(borderAttr);
+    faBorder.appendChild(faIcon);
+    participantMicIconsHolder.appendChild(faBorder);
+
+    faIcon.onclick = function () {
+        console.log("clicked on wanna speak",channel);
+        if(channel) {
+            channel.push("wannaspeak", {token: window.userToken})
+        }
+    };
+
+    let orgMsgWindow = document.getElementById("organizer-msg-window");
+    parentNode.removeChild(orgMsgWindow);
+    parentNode.appendChild(participantMicIconsHolder);
+    parentNode.appendChild(orgMsgWindow);
+}
+
+function addWannaSpeakInGreen() {
+    let parentNode = document.getElementById("participant-mic-position");
+    let participantMicIconsHolder = document.getElementById("participant-mic-icons");
+    if(participantMicIconsHolder) parentNode.removeChild(participantMicIconsHolder);
+    participantMicIconsHolder = document.createElement("div");
+    let attr = document.createAttribute("id");
+    attr.value = "participant-mic-icons";
+    participantMicIconsHolder.setAttributeNode(attr);
+
+    let faBorder = document.createElement("div");
+    let borderAttr = document.createAttribute("id");
+    borderAttr.value = "wanna-speak-border-green";
+    let faIcon = document.createElement("i");
+    let faAttr1 = document.createAttribute("class");
+    faAttr1.value = "fa fa-microphone fa-microphone-green";
+    let faAttr2 = document.createAttribute("id");
+    faAttr2.value = "wanna-speak";
+    faIcon.setAttributeNode(faAttr1);
+    faIcon.setAttributeNode(faAttr2);
+    faBorder.setAttributeNode(borderAttr);
+    faBorder.appendChild(faIcon);
+    participantMicIconsHolder.appendChild(faBorder);
+
+    faIcon.onclick = function () {
+        console.log("clicked on hang up",channel);
+        if(channel) {
+            channel.push("hangup", {token: window.userToken})
+        }
+    };
+
+    let orgMsgWindow = document.getElementById("organizer-msg-window");
+    parentNode.removeChild(orgMsgWindow);
+    parentNode.appendChild(participantMicIconsHolder);
+    parentNode.appendChild(orgMsgWindow);
+}
+
+function addWaitingSpinner() {
+    let parentNode = document.getElementById("participant-mic-position");
+    let participantMicIconsHolder = document.getElementById("participant-mic-icons");
+    if(participantMicIconsHolder) parentNode.removeChild(participantMicIconsHolder);
+    participantMicIconsHolder = document.createElement("div");
+    let attr = document.createAttribute("id");
+    attr.value = "participant-mic-icons";
+    participantMicIconsHolder.setAttributeNode(attr);
+
+    let faBorder = document.createElement("div");
+    let borderAttr = document.createAttribute("id");
+    borderAttr.value = "wanna-speak-border-hide";
+    let faIcon = document.createElement("i");
+    let faAttr1 = document.createAttribute("class");
+    faAttr1.value = "fa fa-microphone";
+    let faAttr2 = document.createAttribute("id");
+    faAttr2.value = "wanna-speak";
+
+    //
+    let faLoader = document.createElement("div");
+    let loaderAttr1 = document.createAttribute("class");
+    loaderAttr1.value = "loader";
+    faLoader.setAttributeNode(loaderAttr1);
+    let faSpinner = document.createElement("div");
+    let spinnerAttr1 = document.createAttribute("class");
+    spinnerAttr1.value = "spinner";
+    faSpinner.setAttributeNode(spinnerAttr1);
+    faLoader.appendChild(faSpinner);
+
+    faIcon.setAttributeNode(faAttr1);
+    faIcon.setAttributeNode(faAttr2);
+    faBorder.setAttributeNode(borderAttr);
+    faBorder.appendChild(faIcon);
+    participantMicIconsHolder.appendChild(faBorder);
+    participantMicIconsHolder.appendChild(faLoader);
+
+    let orgMsgWindow = document.getElementById("organizer-msg-window");
+    parentNode.removeChild(orgMsgWindow);
+    parentNode.appendChild(participantMicIconsHolder);
+    parentNode.appendChild(orgMsgWindow);
+}
+
+function removeAllChildren(node) {
+    while (node.hasChildNodes()) {
+        node.removeChild(node.lastChild);
+    }
+}
+
 function connect(connectMicFunc) {
 //We obtain user token using plug in router
     let socket = new Socket("/socket", {params: {token: window.userToken}});
-
-// When you connect, you'll often need to authenticate the client.
-// For example, imagine you have an authentication plug, `MyAuth`,
-// which authenticates the session and assigns a `:current_user`.
-// If the current user exists you can assign the user's token in
-// the connection for use in the layout.
-//
-// In your "lib/web/router.ex":
-//
-//     pipeline :browser do
-//       ...
-//       plug MyAuth
-//       plug :put_user_token
-//     end
-//
-//     defp put_user_token(conn, _) do
-//       if current_user = conn.assigns[:current_user] do
-//         token = Phoenix.Token.sign(conn, "user socket", current_user.id)
-//         assign(conn, :user_token, token)
-//       else
-//         conn
-//       end
-//     end
-//
-// Now you need to pass this token to JavaScript. You can do so
-// inside a script tag in "lib/web/templates/layout/app.html.eex":
-//
-//     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
-//
-// You will need to verify the user token in the "connect/2" function
-// in "lib/web/channels/user_socket.ex":
-//
-//     def connect(%{"token" => token}, socket) do
-//       # max_age: 1209600 is equivalent to two weeks in seconds
-//       case Phoenix.Token.verify(socket, "user socket", token, max_age: 1209600) do
-//         {:ok, user_id} ->
-//           {:ok, assign(socket, :user, user_id)}
-//         {:error, reason} ->
-//           :error
-//       end
-//     end
-//
-// Finally, pass the token on connect as below. Or remove it
-// from connect if you don't care about authentication.
-
     socket.connect();
 
     console.log("connected");
@@ -65,54 +141,74 @@ function connect(connectMicFunc) {
     channel = socket.channel("participant:mic", {});
     channel.join()
         .receive("ok", resp => {
-            console.log("Joined successfully", resp)
+            console.log("Joined successfully", resp);
             channel.push("start",{token: window.userToken});
         })
         .receive("error", resp => {
             console.log("Unable to join", resp)
         });
 
-    let statusMessages = document.getElementById("status-messages");
+    let statusMessages = document.getElementById("organizer-msg-window");
     channel.on("phx_reply", (data) => {
         const payload = data.response;
         console.log("DATA ", payload);
         // Process the data
         let messageToBeDisplayed;
+        removeAllChildren(statusMessages);
         if(payload.status_code === -2) {
+            addWannaSpeakInGreen();
             messageToBeDisplayed = payload.status_message;
-            let template = document.createElement("div");
-            template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
-            statusMessages.appendChild(template);
+            let template1 = document.createElement("div");
+            template1.innerHTML = `<b>Organiser says...</b>`;
+            let template2 = document.createElement("div");
+            template2.innerHTML = `${messageToBeDisplayed}`;
+            statusMessages.appendChild(template1);
+            statusMessages.appendChild(template2);
             statusMessages.scrollTop = statusMessages.scrollHeight;
         } else if(payload.status_code === -1) {
             messageToBeDisplayed = "Its your turn now";
-            let template = document.createElement("div");
-            template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
-            statusMessages.appendChild(template);
+            let template1 = document.createElement("div");
+            template1.innerHTML = `<b>Organiser says...</b>`;
+            let template2 = document.createElement("div");
+            template2.innerHTML = `${messageToBeDisplayed}`;
+            statusMessages.appendChild(template1);
+            statusMessages.appendChild(template2);
             statusMessages.scrollTop = statusMessages.scrollHeight;
             connectMicFunc(payload.status_message);
         } else if(payload.status_code === -6) {
             messageToBeDisplayed = payload.status_message;
-            let template = document.createElement("div");
-            template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
-            statusMessages.appendChild(template);
+            let template1 = document.createElement("div");
+            template1.innerHTML = `<b>Organiser says...</b>`;
+            let template2 = document.createElement("div");
+            template2.innerHTML = `${messageToBeDisplayed}`;
+            statusMessages.appendChild(template1);
+            statusMessages.appendChild(template2);
             statusMessages.scrollTop = statusMessages.scrollHeight;
         }
     });
     channel.on('wannaspeak', payload => {
         console.log("response is ",payload);
         let messageToBeDisplayed;
+        removeAllChildren(statusMessages);
         if(payload.status_code === -1) {
             messageToBeDisplayed = "You request to speak is under consideration";
+            addWaitingSpinner();
             connectMicFunc(payload.status_message);
-        } else if(payload.status_code === -3 || payload.status_code === -4 || payload.status_code === -5) {
+        } else if(payload.status_code === -3 ){
+            //You are on waitlist
+            addWaitingSpinner();
+            messageToBeDisplayed = payload.status_message;
+        } else if(payload.status_code === -4 || payload.status_code === -5) {
             messageToBeDisplayed = payload.status_message;
         } else {
             messageToBeDisplayed = "Could not process your request now!!"
         }
-        let template = document.createElement("div");
-        template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
-        statusMessages.appendChild(template);
+        let template1 = document.createElement("div");
+        template1.innerHTML = `<b>Organiser says...</b>`;
+        let template2 = document.createElement("div");
+        template2.innerHTML = `${messageToBeDisplayed}`;
+        statusMessages.appendChild(template1);
+        statusMessages.appendChild(template2);
         statusMessages.scrollTop = statusMessages.scrollHeight;
     });
 
@@ -121,6 +217,7 @@ function connect(connectMicFunc) {
         wann_speak.onclick = function () {
             console.log("clicked on wanna speak",channel);
             if(channel) {
+                console.log("click event",wann_speak.getAttribute("class"));
                 channel.push("wannaspeak", {token: window.userToken})
             }
         };
@@ -129,28 +226,23 @@ function connect(connectMicFunc) {
     channel.on("hangup", payload => {
         console.log("response is ",payload);
         let messageToBeDisplayed;
+        removeAllChildren(statusMessages);
         if(payload.status_code === -4){
             messageToBeDisplayed = payload.status_message;
         } else if(payload.status_code === -5) {
             messageToBeDisplayed = payload.status_message;
+            addWannaSpeakIcon();
         } else {
             messageToBeDisplayed = "Could not process your request now!!"
         }
-        let template = document.createElement("div");
-        template.innerHTML = `<b>Organiser says:</b>: ${messageToBeDisplayed}<br>`;
-        statusMessages.appendChild(template);
+        let template1 = document.createElement("div");
+        template1.innerHTML = `<b>Organiser says...</b>`;
+        let template2 = document.createElement("div");
+        template2.innerHTML = `${messageToBeDisplayed}`;
+        statusMessages.appendChild(template1);
+        statusMessages.appendChild(template2);
         statusMessages.scrollTop = statusMessages.scrollHeight;
     });
-
-    const hang_up = document.getElementById("hang-up");
-    if(hang_up){
-        hang_up.onclick = function () {
-            console.log("clicked on hang up",channel);
-            if(channel) {
-                channel.push("hangup", {token: window.userToken})
-            }
-        };
-    }
 }
 
 

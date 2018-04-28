@@ -18,13 +18,21 @@
             <ul class="nav nav-pills pull-right">
                 <%= if @user do %>
                 <li><%= Map.get(@user,"email") %></li>
-                <li><%= link "Sign out", to: session_path(@conn, :delete, Map.get(@user,"current_user")), method: "delete" %></li>
+                <li>
+                    <%= if Map.get(@user,"current_user") do %>
+                    <%= link "Sign out", to: session_path(@conn, :delete, Map.get(@user,"current_user")), method: "delete" %>
+                    <%end%>
+                </li>
                 <% else %>
                 <li>
-                    <%= link "Register", to: user_path(@conn, :new) %>
+                   <%=if shouldShowParticipantSignup(@conn) do %>
+                      <%= link "Moderator Signup", to: user_path(@conn, :new) %>
+                   <%end%>
                 </li>
                 <li>
-                    <%= link "Sign in", to: session_path(@conn, :new) %>
+                  <%=if shouldShowParticipantSignup(@conn) do %>
+                    <%= link "Moderator Login", to: session_path(@conn, :new) %>
+                  <%end%>
                 </li>
                 <li>
                   <%=if shouldShowParticipantSignup(@conn) do %>

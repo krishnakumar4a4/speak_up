@@ -5,15 +5,21 @@
 </ul>
 <h1>Tap to speak</h1>
 <br>
-  <button id= "wanna-speak">Wanna Speak</button>
-  <button id= "hang-up">Hang Up</button>
+<div id="participant-mic-position">
+  <div id="participant-mic-icons">
+        <div id="wanna-speak-border">
+         <i id="wanna-speak" class="fa fa-microphone"></i>
+        </div>
+  </div>
+  <div id="organizer-msg-window">
+  </div>
+</div>
+<div>
 <input type="range" min="1" max="40">
 <pre></pre>
 <h3>Connection Status</h3>
-<div>
-<div id="status-messages"/>
-</div>
 <p>Biquad filter frequency response for: </p>
 <ul class="freq-response-output">
 </ul>
+</div>
 <%end%>
