@@ -176,6 +176,8 @@ function connect(connectMicFunc) {
             statusMessages.scrollTop = statusMessages.scrollHeight;
             connectMicFunc(payload.status_message);
         } else if(payload.status_code === -6) {
+            //Mute from moderator
+            addWannaSpeakIcon();
             messageToBeDisplayed = payload.status_message;
             let template1 = document.createElement("div");
             template1.innerHTML = `<b>Organiser says...</b>`;

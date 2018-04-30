@@ -159,11 +159,15 @@ defmodule SpeakUp.ModeratorWorker do
         {:reply, :donotexist, state}
       [{_token, {_participantName, _participantEmail, nil, _socket_ref, _worker_ref, _fromPid}}|_] ->
         {:reply, :already_unregistered, state}
-      [{token, {participantName, participantEmail, _ttt, socket_ref, worker_ref, fromPid}}|_] ->
+      [{token, {participantName, participantEmail, ttt, socket_ref, worker_ref, fromPid}}|_] ->
         IO.puts("Special unregistering case, connection is made and timedout")
         GenServer.call(worker_ref, {:push_message, %{"status_code" => -2, "status_message" => "Connection terminated, Try again if you wish to speak"}})
         :ets.update_element(:participants, token, {2,{participantName, participantEmail, nil, socket_ref, worker_ref, fromPid}})
-        {:reply, :ok, state}
+        #Removing from live_ttts and then give chance to next participant
+        newState = issue_next_ttt(remove_from_live_ttts(state,token,ttt))
+        #update moderator view when participant hangsout
+        broad_cast_participants_to_moderators(newState)
+        {:reply, :ok, newState}
     end
   end
 
