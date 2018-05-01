@@ -1,4 +1,4 @@
-<h1> Participant Sign Up </h1>
+<h1 id="page-header-name"> Participant Sign Up </h1>
 <%= form_for @conn, participant_path(@conn, :create), [as: :participant], fn f -> %>
 <div class = "form-group">
     <%= text_input f, :name, placeholder: "Please enter your name",class: "form-control" %>
