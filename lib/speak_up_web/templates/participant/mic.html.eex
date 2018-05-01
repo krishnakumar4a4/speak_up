@@ -3,6 +3,10 @@
 <ul class="nav nav-pills pull-right">
     <li><%= link "Sign out", to: participant_path(@conn, :delete) %></li>
 </ul>
+<div id="transcribe-window">
+  <div id="transcribe-participant-name"></div>
+  <div id="transcribe-participant-msg"></div>
+</div>
 <h1>Tap to speak</h1>
 <br>
 <div id="participant-mic-position">

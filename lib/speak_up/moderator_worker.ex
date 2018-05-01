@@ -74,12 +74,12 @@ defmodule SpeakUp.ModeratorWorker do
     {:reply, :ok, upState2}
   end
 
-  def handle_call({:update_channel_details, token, socket}, fromPid, state) do
+  def handle_call({:update_channel_details, token, socketRef}, fromPid, state) do
     case :ets.lookup(:participants, token) do
       [] ->
         {:reply, :ok, state}
-      [{^token,{pName,pEmail,ttt,sockeRef,workerRef,_fPid}}|_] ->
-        :ets.update_element(:participants, token, {2,{pName, pEmail, ttt, sockeRef, workerRef, fromPid}})
+      [{^token,{pName,pEmail,ttt,_sockeRef,workerRef,_fPid}}|_] ->
+        :ets.update_element(:participants, token, {2,{pName, pEmail, ttt, socketRef, workerRef, fromPid}})
         {:reply, :ok,state}
     end
   end
