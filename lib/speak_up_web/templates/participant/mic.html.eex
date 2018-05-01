@@ -7,14 +7,14 @@
   <div id="transcribe-participant-name"></div>
   <div id="transcribe-participant-msg"></div>
 </div>
-<h1>
+<div>
   <%= if elem(getParticipantNameFromCookie(@conn),0) do %>
-      Welcome <%= elem(getParticipantNameFromCookie(@conn),1)%>!!
-      <p>Tap Mic to speak</p>
+      <h1>Welcome <%= elem(getParticipantNameFromCookie(@conn),1)%>!!</h1>
+      <h2>Tap Mic to speak</h2>
   <% else %>
       <h1>It looks like you are not signed up, Please do it now</h1>
   <%end%>
-</h1>
+</div>
 <br>
 <div id="participant-mic-position">
   <div id="participant-mic-icons">
