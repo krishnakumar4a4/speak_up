@@ -63,7 +63,6 @@ function addWannaSpeakIcon() {
     participantMicIconsHolder.appendChild(faBorder);
 
     faIcon.onclick = function () {
-        console.log("clicked on wanna speak",channel);
         if(channel) {
             channel.push("wannaspeak", {token: window.userToken})
         }
@@ -99,7 +98,6 @@ function addWannaSpeakInGreen() {
     participantMicIconsHolder.appendChild(faBorder);
 
     faIcon.onclick = function () {
-        console.log("clicked on hang up",channel);
         if(channel) {
             channel.push("hangup", {token: window.userToken})
         }
@@ -164,12 +162,10 @@ function connect(connectMicFunc) {
     let socket = new Socket("/socket", {params: {token: window.userToken}});
     socket.connect();
 
-    console.log("connected");
 // Now that you are connected, you can join channels with a topic:
     channel = socket.channel("participant:mic", {});
     channel.join()
         .receive("ok", resp => {
-            console.log("Joined successfully", resp);
             channel.push("start",{token: window.userToken});
         })
         .receive("error", resp => {
@@ -179,7 +175,6 @@ function connect(connectMicFunc) {
     let statusMessages = document.getElementById("organizer-msg-window");
     channel.on("phx_reply", (data) => {
         const payload = data.response;
-        console.log("DATA ", payload);
         // Process the data
         let messageToBeDisplayed;
         removeAllChildren(statusMessages);
@@ -237,7 +232,6 @@ function connect(connectMicFunc) {
         }
     });
     channel.on('wannaspeak', payload => {
-        console.log("response is ",payload);
         let messageToBeDisplayed;
         removeAllChildren(statusMessages);
         if(payload.status_code === -1) {
@@ -267,16 +261,13 @@ function connect(connectMicFunc) {
     const wann_speak = document.getElementById("wanna-speak");
     if(wann_speak){
         wann_speak.onclick = function () {
-            console.log("clicked on wanna speak",channel);
             if(channel) {
-                console.log("click event",wann_speak.getAttribute("class"));
                 channel.push("wannaspeak", {token: window.userToken})
             }
         };
     }
 
     channel.on("hangup", payload => {
-        console.log("response is ",payload);
         let messageToBeDisplayed;
         removeAllChildren(statusMessages);
         if(payload.status_code === -4){
@@ -307,7 +298,6 @@ function connectModerator(moderatorEmail) {
         }});
     socket.connect();
 
-    console.log("connected to moderator control");
 // Now that you are connected, you can join channels with a topic:
     moderatorChannel = socket.channel("moderator:control", {});
     moderatorChannel.join()
@@ -337,9 +327,7 @@ function connectModerator(moderatorEmail) {
         parentTableNode.appendChild(newModeratorControlView);
         moderatorControlView = document.getElementById("table-body");
 
-        console.log("change payload is ",data.response);
         if(data.response.status_code === -10) {
-            console.log("Got events", data.response);
             let participants = data.response.participants;
             //Have to remove all the children before we add new
             for(let i=0; i<data.response.participants.length; i++) {
@@ -362,7 +350,6 @@ function connectModerator(moderatorEmail) {
                     buttonAttr.value = "btn btn-success";
                     micAttr.value = "fa fa-microphone";
                     speechControl.onclick = function () {
-                        console.log("clicked speechControl");
                         moderatorChannel.push("mute",{token: participants[i].token})
                     };
                 } else {
@@ -383,7 +370,6 @@ window.addEventListener('load', function() {
     const userToken = window.userToken;
     const moderatorEmail = window.moderatorEmail;
     const moderatorToken = window.moderatorToken;
-    console.log("Page loaded with ",userToken, moderatorEmail, moderatorToken);
 
     if(userToken && !channel) {
         //Connects, Only if the channel is not created

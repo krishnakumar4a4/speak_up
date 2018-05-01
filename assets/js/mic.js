@@ -1,5 +1,5 @@
 export function connectMicDynamicCompressor(temporaryTalktoken) {
-    console.log("ttt",temporaryTalktoken);
+    // console.log("ttt",temporaryTalktoken);
     let hostname = "localhost";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
@@ -56,7 +56,7 @@ export function connectMicDynamicCompressor(temporaryTalktoken) {
 
 //Created for fun, do not use this
 export function connectMicDecayingEcho(temporaryTalktoken) {
-    console.log("ttt",temporaryTalktoken);
+    // console.log("ttt",temporaryTalktoken);
     let hostname = "localhost";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
@@ -124,7 +124,7 @@ export function connectMicDecayingEcho(temporaryTalktoken) {
 }
 
 export function connectMicRaw(temporaryTalktoken) {
-    console.log("ttt",temporaryTalktoken);
+    // console.log("ttt",temporaryTalktoken);
     let hostname = "localhost";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
@@ -180,8 +180,6 @@ export function connectMicRaw(temporaryTalktoken) {
 
 export function connectMicBiquadLowshelf(temporaryTalktoken) {
     console.log("ttt",temporaryTalktoken);
-    var pre = document.querySelector('pre');
-    var video = document.querySelector('video');
     var range = document.querySelector('input');
     var freqResponseOutput = document.querySelector('.freq-response-output');
 // create float32 arrays for getFrequencyResponse
