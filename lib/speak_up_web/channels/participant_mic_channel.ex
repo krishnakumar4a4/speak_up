@@ -9,7 +9,7 @@ defmodule SpeakUpWeb.ParticipantMicChannel do
     IO.inspect(payload)
     case Map.fetch(payload, "token") do
       {:ok, token} ->
-        GenServer.call(ModeratorWorker,{:update_channel_details, token, socket})
+        GenServer.call(ModeratorWorker,{:update_channel_details, token, socket_ref(socket)})
         {:noreply, socket}
       :error ->
         {:stop, "No token",socket}
@@ -62,6 +62,14 @@ defmodule SpeakUpWeb.ParticipantMicChannel do
   def handle_info({:push_message, message, socketRef}, socket) do
     IO.puts("pushing to socketref")
     reply(socketRef, {:ok, message})
+    {:noreply, socket}
+  end
+
+  #Push message to participant channel
+  def handle_info({:publish_msg, msg, socketRef}, socket) do
+    IO.inspect("inside participant channel")
+    IO.inspect(msg)
+    reply(socketRef, {:ok, msg})
     {:noreply, socket}
   end
 

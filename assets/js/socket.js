@@ -4,9 +4,9 @@
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/web/endpoint.ex":
 import {Socket} from "phoenix"
-import {connectMic} from "./mic";
+import {connectMicBiquadLowshelf} from "./mic";
 
-const connectMicFunc = connectMic;
+const connectMicFunc = connectMicBiquadLowshelf;
 
 let channel;
 let moderatorChannel;
@@ -175,8 +175,8 @@ function connect(connectMicFunc) {
             statusMessages.appendChild(template2);
             statusMessages.scrollTop = statusMessages.scrollHeight;
             connectMicFunc(payload.status_message);
-        } else if(payload.status_code === -6) {
             //Mute from moderator
+        } else if(payload.status_code === -6) {
             addWannaSpeakIcon();
             messageToBeDisplayed = payload.status_message;
             let template1 = document.createElement("div");
@@ -186,6 +186,25 @@ function connect(connectMicFunc) {
             statusMessages.appendChild(template1);
             statusMessages.appendChild(template2);
             statusMessages.scrollTop = statusMessages.scrollHeight;
+        } else if(payload.status_code === -11) {
+            let transcribeWindow = document.getElementById("transcribe-window");
+            let participantName = payload.participant_name;
+            let participantMsg = payload.participant_msg;
+            removeAllChildren(transcribeWindow);
+            let speakerName = document.createElement("div");
+            let speakerNameAttr = document.createAttribute("id");
+            speakerNameAttr.value = "transcribe-participant-name";
+            speakerName.setAttributeNode(speakerNameAttr);
+
+            let speakerMsg = document.createElement("div");
+            let speakerMsgAttr = document.createAttribute("id");
+            speakerMsgAttr.value = "transcribe-participant-msg";
+            speakerMsg.setAttributeNode(speakerMsgAttr);
+
+            speakerName.innerHTML = `${participantName}`;
+            speakerMsg.innerHTML = `${participantMsg}`;
+            transcribeWindow.appendChild(speakerName);
+            transcribeWindow.appendChild(speakerMsg);
         }
     });
     channel.on('wannaspeak', payload => {
