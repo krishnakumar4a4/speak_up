@@ -11,6 +11,34 @@ const connectMicFunc = connectMicBiquadLowshelf;
 let channel;
 let moderatorChannel;
 
+function addMicIconForError() {
+    let parentNode = document.getElementById("participant-mic-position");
+    let participantMicIconsHolder = document.getElementById("participant-mic-icons");
+    if(participantMicIconsHolder) parentNode.removeChild(participantMicIconsHolder);
+    participantMicIconsHolder = document.createElement("div");
+    let attr = document.createAttribute("id");
+    attr.value = "participant-mic-icons";
+    participantMicIconsHolder.setAttributeNode(attr);
+
+    let faBorder = document.createElement("div");
+    let borderAttr = document.createAttribute("id");
+    borderAttr.value = "wanna-speak-border-red";
+    let faIcon = document.createElement("i");
+    let faAttr1 = document.createAttribute("class");
+    faAttr1.value = "fa fa-microphone-slash fa-microphone-red";
+    let faAttr2 = document.createAttribute("id");
+    faAttr2.value = "wanna-speak";
+    faIcon.setAttributeNode(faAttr1);
+    faIcon.setAttributeNode(faAttr2);
+    faBorder.setAttributeNode(borderAttr);
+    faBorder.appendChild(faIcon);
+    participantMicIconsHolder.appendChild(faBorder);
+    let orgMsgWindow = document.getElementById("organizer-msg-window");
+    parentNode.removeChild(orgMsgWindow);
+    parentNode.appendChild(participantMicIconsHolder);
+    parentNode.appendChild(orgMsgWindow);
+}
+
 function addWannaSpeakIcon() {
     let parentNode = document.getElementById("participant-mic-position");
     let participantMicIconsHolder = document.getElementById("participant-mic-icons");
@@ -166,6 +194,7 @@ function connect(connectMicFunc) {
             statusMessages.appendChild(template2);
             statusMessages.scrollTop = statusMessages.scrollHeight;
         } else if(payload.status_code === -1) {
+            addWannaSpeakInGreen();
             messageToBeDisplayed = "Its your turn now";
             let template1 = document.createElement("div");
             template1.innerHTML = `<b>Organiser says...</b>`;
@@ -220,8 +249,10 @@ function connect(connectMicFunc) {
             addWaitingSpinner();
             messageToBeDisplayed = payload.status_message;
         } else if(payload.status_code === -4 || payload.status_code === -5) {
+            addMicIconForError();
             messageToBeDisplayed = payload.status_message;
         } else {
+            addMicIconForError();
             messageToBeDisplayed = "Could not process your request now!!"
         }
         let template1 = document.createElement("div");
@@ -254,6 +285,7 @@ function connect(connectMicFunc) {
             messageToBeDisplayed = payload.status_message;
             addWannaSpeakIcon();
         } else {
+            addMicIconForError();
             messageToBeDisplayed = "Could not process your request now!!"
         }
         let template1 = document.createElement("div");
