@@ -67,6 +67,7 @@ defmodule SpeakUp.ModeratorWorker do
   def handle_call({:delete, token}, _from, state) do
     #During participant signout
     :ets.delete(:participants, token)
+    terminate_participant_webocket_worker(token)
     upState = remove_from_live_ttts(state,token)
     upState2 = remove_from_request_queue(upState,token)
     #update moderator view when participant signs out
@@ -93,6 +94,7 @@ defmodule SpeakUp.ModeratorWorker do
          {:reply,:ok,state}
        [{token,_}] ->
          :ets.delete(:participants,token)
+         terminate_participant_webocket_worker(token)
          broad_cast_participants_to_moderators(state)
          upState = remove_from_request_queue(remove_from_live_ttts(state,token),token)
          {:reply,:ok,upState}
@@ -141,6 +143,7 @@ defmodule SpeakUp.ModeratorWorker do
       [{token, {participantName, participantEmail, ttt, socket_ref, worker_ref, fromPid}}|_] ->
         IO.puts("Destroying ttt")
         :ets.update_element(:participants, token, {2,{participantName, participantEmail, nil, socket_ref, worker_ref, fromPid}})
+        terminate_participant_webocket_worker(token)
         #terminate ws_handler at the speaker side
         GenServer.call({:global, :moderator}, {:terminate_ws_handler, token, ttt})
         #Removing from live_ttts and then give chance to next participant
@@ -163,6 +166,7 @@ defmodule SpeakUp.ModeratorWorker do
         IO.puts("Special unregistering case, connection is made and timedout")
         GenServer.call(worker_ref, {:push_message, %{"status_code" => -2, "status_message" => "Connection terminated, Try again if you wish to speak"}})
         :ets.update_element(:participants, token, {2,{participantName, participantEmail, nil, socket_ref, worker_ref, fromPid}})
+        terminate_participant_webocket_worker(token)
         #Removing from live_ttts and then give chance to next participant
         newState = issue_next_ttt(remove_from_live_ttts(state,token,ttt))
         #update moderator view when participant hangsout
@@ -282,5 +286,18 @@ defmodule SpeakUp.ModeratorWorker do
     participants = for {t,{pName, pEmail,ttt,_,_,_}} <- :ets.tab2list(:participants), do: %{"token" => t, "pName" => pName, "pEmail" => pEmail, "ttt" => ttt}
     msg = %{"status_code" => -10, "participants" => participants}
     for {mChannelPid, socketRef} <- MapSet.to_list(Map.get(state, "moderator_channels")), do: (send mChannelPid, {:push_message, msg, socketRef})
+  end
+
+  #Terminate participant websocket worker processes if the participant hangs up or signs out
+  defp terminate_participant_webocket_worker(token) do
+    case :ets.lookup(:participants, token) do
+      [] -> false
+      [{^token,{_,_,_,_,workerRef,_}}|_] ->
+        case Supervisor.terminate_child(SpeakUp.ParticipantWebsocketSupervisor, workerRef) do
+          :ok -> true
+          _ -> IO.puts("Got one stale worker process")
+               false
+        end
+    end
   end
 end
