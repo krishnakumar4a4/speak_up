@@ -57,7 +57,7 @@ export function connectMicDynamicCompressor(temporaryTalktoken) {
 //Created for fun, do not use this
 export function connectMicDecayingEcho(temporaryTalktoken) {
     // console.log("ttt",temporaryTalktoken);
-    let hostname = "localhost";
+    let hostname = "10.136.126.126";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
 
@@ -84,7 +84,7 @@ export function connectMicDecayingEcho(temporaryTalktoken) {
                     var gain = audioCtx.createGain();
                     gain.gain.value = 0.8;
 
-                    var bufferSize = 2048;
+                    var bufferSize = 8192;
                     var recorder = audioCtx.createScriptProcessor(bufferSize, 1, 1);
 
                     recorder.onaudioprocess = function (e) {
@@ -125,7 +125,7 @@ export function connectMicDecayingEcho(temporaryTalktoken) {
 
 export function connectMicRaw(temporaryTalktoken) {
     // console.log("ttt",temporaryTalktoken);
-    let hostname = "localhost";
+    let hostname = "10.136.126.126";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
 
@@ -192,7 +192,7 @@ export function connectMicBiquadLowshelf(temporaryTalktoken) {
     var magResponseOutput = new Float32Array(5);
     var phaseResponseOutput = new Float32Array(5);
 
-    let hostname = "localhost";
+    let hostname = "10.136.127.28";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
 
@@ -215,15 +215,15 @@ export function connectMicBiquadLowshelf(temporaryTalktoken) {
                     var source = audioCtx.createMediaStreamSource(stream);
                     // Create a biquadfilter
                     var biquadFilter = audioCtx.createBiquadFilter();
-                    biquadFilter.type = "lowshelf";
-                    biquadFilter.frequency.value = 1000;
-                    biquadFilter.gain.value = range.value;
+                    biquadFilter.type = "highshelf";
+                    biquadFilter.frequency.value = 5000;
+                    biquadFilter.gain.value = 0.3;
                     // connect the AudioBufferSourceNode to the gainNode
                     // and the gainNode to the destination, so we can play the
                     // music and adjust the volume using the mouse cursor
                     source.connect(biquadFilter);
 
-                    var bufferSize = 2048;
+                    var bufferSize = 8192;
                     var recorder = audioCtx.createScriptProcessor(bufferSize, 1, 1);
 
                     recorder.onaudioprocess = function (e) {
@@ -239,16 +239,16 @@ export function connectMicBiquadLowshelf(temporaryTalktoken) {
                     range.oninput = function () {
                         biquadFilter.gain.value = range.value;
                     };
-                    function calcFrequencyResponse() {
-                        biquadFilter.getFrequencyResponse(myFrequencyArray, magResponseOutput, phaseResponseOutput);
-                        for (i = 0; i <= myFrequencyArray.length - 1; i++) {
-                            var listItem = document.createElement('li');
-                            listItem.innerHTML = '<strong>' + myFrequencyArray[i] + 'Hz</strong>: Magnitude ' + magResponseOutput[i] + ', Phase ' + phaseResponseOutput[i] + ' radians.';
-                            freqResponseOutput.appendChild(listItem);
-                        }
-                    }
-
-                    calcFrequencyResponse();
+                    // function calcFrequencyResponse() {
+                    //     biquadFilter.getFrequencyResponse(myFrequencyArray, magResponseOutput, phaseResponseOutput);
+                    //     for (i = 0; i <= myFrequencyArray.length - 1; i++) {
+                    //         var listItem = document.createElement('li');
+                    //         listItem.innerHTML = '<strong>' + myFrequencyArray[i] + 'Hz</strong>: Magnitude ' + magResponseOutput[i] + ', Phase ' + phaseResponseOutput[i] + ' radians.';
+                    //         freqResponseOutput.appendChild(listItem);
+                    //     }
+                    // }
+                    //
+                    // calcFrequencyResponse();
                 })
                 .catch(function (err) {
                     console.log('The following gUM error occured: ' + err);
