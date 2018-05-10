@@ -8,7 +8,7 @@ use Mix.Config
 # with brunch.io to recompile .js and .css sources.
 config :speak_up, SpeakUpWeb.Endpoint,
   http: [port: 4000],
-  host: "10.136.127.28",
+#  host: "10.136.127.28",
   https: [port: 4443, keyfile: "priv/keys/localhost.key", certfile: "priv/keys/localhost.cert"],
   debug_errors: true,
   code_reloader: true,

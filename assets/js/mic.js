@@ -181,18 +181,15 @@ export function connectMicRaw(temporaryTalktoken) {
 export function connectMicBiquadLowshelf(temporaryTalktoken) {
     console.log("ttt",temporaryTalktoken);
     var range = document.querySelector('input');
-    var freqResponseOutput = document.querySelector('.freq-response-output');
-// create float32 arrays for getFrequencyResponse
-    var myFrequencyArray = new Float32Array(5);
-    myFrequencyArray[0] = 1000;
-    myFrequencyArray[1] = 2000;
-    myFrequencyArray[2] = 3000;
-    myFrequencyArray[3] = 4000;
-    myFrequencyArray[4] = 5000;
-    var magResponseOutput = new Float32Array(5);
-    var phaseResponseOutput = new Float32Array(5);
 
-    let hostname = "10.136.127.28";
+    // prepare canvas for rendering
+    var canvas = document.getElementsByTagName("canvas")[0];
+    var sctxt = canvas.getContext("2d");
+    sctxt.fillRect(0, 0, 512, 200);
+    sctxt.strokeStyle = "#FFFFFF";
+    sctxt.lineWidth = 2;
+
+    let hostname = "localhost";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
 
@@ -204,11 +201,6 @@ export function connectMicBiquadLowshelf(temporaryTalktoken) {
             console.log('getUserMedia supported.');
             navigator.mediaDevices.getUserMedia({audio: true})
                 .then(function (stream) {
-                    // video.srcObject = stream;
-                    // video.onloadedmetadata = function(e) {
-                    //     video.play();
-                    //     video.muted = true;
-                    // };
                     // Create a MediaStreamAudioSourceNode
                     // Feed the HTMLMediaElement into it
                     var audioCtx = new AudioContext();
@@ -223,32 +215,52 @@ export function connectMicBiquadLowshelf(temporaryTalktoken) {
                     // music and adjust the volume using the mouse cursor
                     source.connect(biquadFilter);
 
-                    var bufferSize = 8192;
+                    //Create audio analyzer node
+                    var analyser = audioCtx.createAnalyser();
+                    analyser.fftSize = 2048;
+                    analyser.smoothingTimeConstant = 0.1;
+
+                    var bufferSize = 4096;
                     var recorder = audioCtx.createScriptProcessor(bufferSize, 1, 1);
 
                     recorder.onaudioprocess = function (e) {
                         if (!clientStream.writable) return;
                         var left = e.inputBuffer.getChannelData(0);
                         if(clientStream.writable) clientStream.write(convertoFloat32ToInt16(left));
+                        draw();
                     };
 
-                    biquadFilter.connect(recorder);
+                    biquadFilter.connect(analyser);
+                    analyser.connect(recorder);
                     recorder.connect(audioCtx.destination);
                     // Get new mouse pointer coordinates when mouse is moved
                     // then set new gain value
                     range.oninput = function () {
                         biquadFilter.gain.value = range.value;
                     };
-                    // function calcFrequencyResponse() {
-                    //     biquadFilter.getFrequencyResponse(myFrequencyArray, magResponseOutput, phaseResponseOutput);
-                    //     for (i = 0; i <= myFrequencyArray.length - 1; i++) {
-                    //         var listItem = document.createElement('li');
-                    //         listItem.innerHTML = '<strong>' + myFrequencyArray[i] + 'Hz</strong>: Magnitude ' + magResponseOutput[i] + ', Phase ' + phaseResponseOutput[i] + ' radians.';
-                    //         freqResponseOutput.appendChild(listItem);
-                    //     }
-                    // }
-                    //
-                    // calcFrequencyResponse();
+
+
+                    // data from the analyser node
+                    var buffer = new Uint8Array(analyser.frequencyBinCount);
+
+                    function draw() {
+                        analyser.getByteTimeDomainData(buffer);
+                        // console.log("buffer data",buffer);
+
+                        // do the canvas painting
+                        var width = canvas.width;
+                        var height = canvas.height;
+                        var step = parseInt(buffer.length / width);
+                        sctxt.fillRect(0, 0, width, height);
+                        sctxt.drawImage(canvas, 0, 0, width, height);
+                        sctxt.beginPath();
+                        sctxt.moveTo(0, buffer[0] * height / 256);
+                        for(var i=1; i< width; i++) {
+                            sctxt.lineTo(i, buffer[i*step] * height / 256);
+                        }
+                        sctxt.stroke();
+                        window.requestAnimationFrame(draw);
+                    }
                 })
                 .catch(function (err) {
                     console.log('The following gUM error occured: ' + err);
