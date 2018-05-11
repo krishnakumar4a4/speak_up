@@ -207,7 +207,7 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                     var source = audioCtx.createMediaStreamSource(stream);
                     // Create a biquadfilter
                     var biquadFilter = audioCtx.createBiquadFilter();
-                    biquadFilter.type = "highshelf";
+                    biquadFilter.type = "lowpass";
                     biquadFilter.frequency.value = 5000;
                     biquadFilter.gain.value = 0.3;
                     // connect the AudioBufferSourceNode to the gainNode
@@ -220,7 +220,8 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                     analyser.fftSize = 2048;
                     analyser.smoothingTimeConstant = 0.1;
 
-                    var bufferSize = 4096;
+                    //Buffer size for script processor should be either 0 or starts from 256 and multiples
+                    var bufferSize = 0;
                     var recorder = audioCtx.createScriptProcessor(bufferSize, 1, 1);
 
                     recorder.onaudioprocess = function (e) {
@@ -230,9 +231,14 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                         // draw();
                     };
 
+                    //Add a 0 gain node to suppress output from speaker
+                    let gainNode = audioCtx.createGain();
+                    gainNode.gain.value = 0;
+
                     biquadFilter.connect(analyser);
                     analyser.connect(recorder);
-                    recorder.connect(audioCtx.destination);
+                    recorder.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
                     // Get new mouse pointer coordinates when mouse is moved
                     // then set new gain value
                     range.oninput = function () {
@@ -245,8 +251,11 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                         console.log("changed gain value is ",biquadFilter.gain.value);
                     });
                     channel.on("mic-input-frequency", payload => {
-                        biquadFilter.frequency.value = payload.micInputFrequency;
+                        console.log("freq changed by moderator",payload);
+                        biquadFilter.frequency.cancelScheduledValues(audioCtx.currentTime);
+                        biquadFilter.frequency.setValueAtTime(payload.micInputFrequency, audioCtx.currentTime + 1);
                         console.log("changed frequency value is ",biquadFilter.frequency.value);
+                        console.log("audio sample rate is ",audioCtx);
                     });
 
                     // data from the analyser node
