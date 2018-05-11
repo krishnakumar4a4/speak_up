@@ -11,6 +11,20 @@ defmodule SpeakUpWeb.ModeratorChannel do
     {:noreply, socket}
   end
 
+  def handle_in("mic-tune-controls", %{"micInputGain" => micInputGain}, socket) do
+    IO.puts("Broadcasting gain value")
+#    broadcast! socket, "mic-input-gain", %{"micInputGain" => micInputGain}
+    SpeakUpWeb.Endpoint.broadcast!("participant:mic", "mic-input-gain", %{"micInputGain" => micInputGain})
+    {:noreply, socket}
+  end
+
+  def handle_in("mic-tune-controls", %{"micInputFrequency" => micInputFrequency}, socket) do
+    IO.puts("Broadcasting freq value")
+#    broadcast! socket, "mic-input-frequency", %{"micInputFrequency" => micInputFrequency}
+    SpeakUpWeb.Endpoint.broadcast!("participant:mic", "mic-input-frequency", %{"micInputFrequency" => micInputFrequency})
+    {:noreply, socket}
+  end
+
   def handle_in("mute", payload, socket) do
     token = Map.get(payload,"token")
     case :ets.lookup(:participants, token) do

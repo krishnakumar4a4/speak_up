@@ -9,16 +9,26 @@
 <% end %>
 <script>window.moderatorToken = "<%= Map.get(@user,"token") %>"</script>
 <script>window.moderatorEmail = "<%= Map.get(@user,"email") %>"</script>
-<h3>Connected people</h3>
-<table class="table">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Control</th>
-    </tr>
-    </thead>
-    <tbody id="table-body">
-    </tbody>
-</table>
+<div id="moderator-layout-view">
+<div id="moderator-layout-table">
+  <h3>Connected people</h3>
+  <table class="table">
+      <thead>
+      <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Control</th>
+      </tr>
+      </thead>
+      <tbody id="table-body">
+      </tbody>
+  </table>
+</div>
+<div id="moderator-layout-controls">
+  <label>Gain -40dB to 40dB </label>
+  <input id="mic-input-gain" type="range" min="-40" max="40" step="0.1" value="-20" onchange=""/>
+  <label>Frequency 0 to 22100Hz</label>
+  <input id="mic-input-frequency" type="range" min="0" max="22100" step="100" value="1000"/>
+</div>
+</div>
 <% end %>
