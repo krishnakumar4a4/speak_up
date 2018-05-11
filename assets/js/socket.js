@@ -198,7 +198,7 @@ function connect(connectMicFunc) {
             statusMessages.appendChild(template1);
             statusMessages.appendChild(template2);
             statusMessages.scrollTop = statusMessages.scrollHeight;
-            connectMicFunc(payload.status_message);
+            connectMicFunc(payload.status_message,channel);
             //Mute from moderator
         } else if(payload.status_code === -6) {
             addWannaSpeakIcon();
@@ -237,7 +237,7 @@ function connect(connectMicFunc) {
         if(payload.status_code === -1) {
             messageToBeDisplayed = "You request to speak is under consideration";
             addWaitingSpinner();
-            connectMicFunc(payload.status_message);
+            connectMicFunc(payload.status_message, channel);
         } else if(payload.status_code === -3 ){
             //You are on waitlist
             addWaitingSpinner();
@@ -308,6 +308,17 @@ function connectModerator(moderatorEmail) {
             console.log("Unable to join moderator control", resp)
         });
 
+    //Mic controls
+    document.getElementById("mic-input-gain").addEventListener("change",(event) => {
+        console.log("input changed",event.target.value);
+        moderatorChannel.push("mic-tune-controls",{ micInputGain: event.target.value })
+    });
+
+    document.getElementById("mic-input-frequency").addEventListener("change",(event) => {
+        console.log("frequency changed",event.target.value);
+        moderatorChannel.push("mic-tune-controls",{ micInputFrequency: event.target.value })
+    });
+
     //Registering moderator
     moderatorChannel.push("register",{
         params: {
@@ -364,6 +375,13 @@ function connectModerator(moderatorEmail) {
             }
         }
      });
+    //
+    // moderatorChannel.on("mic-input-gain", payload => {
+    //     console.log("gain changed",payload);
+    // });
+    // moderatorChannel.on("mic-input-frequency", payload => {
+    //     console.log("freq changed",payload);
+    // });
 }
 
 window.addEventListener('load', function() {

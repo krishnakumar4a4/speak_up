@@ -178,7 +178,7 @@ export function connectMicRaw(temporaryTalktoken) {
 }
 
 
-export function connectMicBiquadLowshelf(temporaryTalktoken) {
+export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
     console.log("ttt",temporaryTalktoken);
     var range = document.querySelector('input');
 
@@ -227,7 +227,7 @@ export function connectMicBiquadLowshelf(temporaryTalktoken) {
                         if (!clientStream.writable) return;
                         var left = e.inputBuffer.getChannelData(0);
                         if(clientStream.writable) clientStream.write(convertoFloat32ToInt16(left));
-                        draw();
+                        // draw();
                     };
 
                     biquadFilter.connect(analyser);
@@ -239,6 +239,15 @@ export function connectMicBiquadLowshelf(temporaryTalktoken) {
                         biquadFilter.gain.value = range.value;
                     };
 
+                    channel.on("mic-input-gain", payload => {
+                        console.log("gain changed by moderator",payload);
+                        biquadFilter.gain.value = payload.micInputGain;
+                        console.log("changed gain value is ",biquadFilter.gain.value);
+                    });
+                    channel.on("mic-input-frequency", payload => {
+                        biquadFilter.frequency.value = payload.micInputFrequency;
+                        console.log("changed frequency value is ",biquadFilter.frequency.value);
+                    });
 
                     // data from the analyser node
                     var buffer = new Uint8Array(analyser.frequencyBinCount);
