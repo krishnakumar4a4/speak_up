@@ -3,12 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f52cf3fd-4a1a-4031-8209-54ca8f082671" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/css/app.scss" afterPath="$PROJECT_DIR$/assets/css/app.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/js/app.js" afterPath="$PROJECT_DIR$/assets/js/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/js/mic.js" afterPath="$PROJECT_DIR$/assets/js/mic.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/js/socket.js" afterPath="$PROJECT_DIR$/assets/js/socket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/channels/moderator_channel.ex" afterPath="$PROJECT_DIR$/lib/speak_up_web/channels/moderator_channel.ex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/templates/moderator/index.html.eex" afterPath="$PROJECT_DIR$/lib/speak_up_web/templates/moderator/index.html.eex" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -35,28 +30,18 @@
       <file leaf-file-name="mic.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/assets/js/mic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4579">
-              <caret line="241" column="47" lean-forward="false" selection-start-line="241" selection-start-column="47" selection-end-line="241" selection-end-column="47" />
+            <state relative-caret-position="196">
+              <caret line="257" column="68" lean-forward="false" selection-start-line="257" selection-start-column="68" selection-end-line="257" selection-end-column="68" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="participant_websocket_supervisor.ex" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/speak_up/participant_websocket_supervisor.ex">
+      <file leaf-file-name="moderator_channel.ex" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/channels/moderator_channel.ex">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="60" lean-forward="false" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="participant_mic_channel.ex" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/channels/participant_mic_channel.ex">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="59" column="5" lean-forward="false" selection-start-line="59" selection-start-column="5" selection-end-line="59" selection-end-column="5" />
+            <state relative-caret-position="-71">
+              <caret line="23" column="119" lean-forward="false" selection-start-line="23" selection-start-column="119" selection-end-line="23" selection-end-column="119" />
               <folding />
             </state>
           </provider>
@@ -65,7 +50,7 @@
       <file leaf-file-name="socket.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/assets/js/socket.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-468">
+            <state relative-caret-position="-1963">
               <caret line="176" column="28" lean-forward="false" selection-start-line="176" selection-start-column="28" selection-end-line="176" selection-end-column="28" />
               <folding>
                 <element signature="e#234#264#0" expanded="true" />
@@ -1406,12 +1391,12 @@
       <workItem from="1524181708132" duration="48518000" />
       <workItem from="1524649181428" duration="35112000" />
       <workItem from="1524846487453" duration="70382000" />
-      <workItem from="1525849863481" duration="16860000" />
+      <workItem from="1525849863481" duration="21508000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="319254000" />
+    <option name="totallyTimeSpent" value="323902000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1862,6 +1847,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/speak_up/participant_websocket_supervisor.ex">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="9" column="60" lean-forward="false" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/speak_up_web/channels/participant_mic_channel.ex">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="179">
@@ -1872,23 +1865,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/speak_up_web/channels/moderator_channel.ex">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
+        <state relative-caret-position="-71">
           <caret line="23" column="119" lean-forward="false" selection-start-line="23" selection-start-column="119" selection-end-line="23" selection-end-column="119" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/speak_up/participant_websocket_supervisor.ex">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="60" lean-forward="false" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/assets/js/socket.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-468">
+        <state relative-caret-position="-1963">
           <caret line="176" column="28" lean-forward="false" selection-start-line="176" selection-start-column="28" selection-end-line="176" selection-end-column="28" />
           <folding>
             <element signature="e#234#264#0" expanded="true" />
@@ -1898,8 +1883,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/assets/js/mic.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4579">
-          <caret line="241" column="47" lean-forward="false" selection-start-line="241" selection-start-column="47" selection-end-line="241" selection-end-column="47" />
+        <state relative-caret-position="196">
+          <caret line="257" column="68" lean-forward="false" selection-start-line="257" selection-start-column="68" selection-end-line="257" selection-end-column="68" />
           <folding />
         </state>
       </provider>
