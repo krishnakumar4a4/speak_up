@@ -9,7 +9,7 @@ use Mix.Config
 config :speak_up, SpeakUpWeb.Endpoint,
   http: [port: 4000],
 #  host: "10.136.127.28",
-  https: [port: 4443, keyfile: "priv/keys/localhost.key", certfile: "priv/keys/localhost.cert"],
+  https: [port: 4443, keyfile: "priv/keys/privkey.pem", certfile: "priv/keys/fullchain.pem"],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
