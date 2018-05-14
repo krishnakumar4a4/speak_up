@@ -189,7 +189,7 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
     sctxt.strokeStyle = "#FFFFFF";
     sctxt.lineWidth = 2;
 
-    let hostname = "localhost";
+    let hostname = "motelligence.com";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
 
