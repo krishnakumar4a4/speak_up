@@ -49,9 +49,4 @@ defmodule SpeakUpWeb.ParticipantController do
         |> render "index.html"
     end
   end
-
-#  def wanna_speak(conn, params) do
-#    IO.inspect("I want to speak")
-#    render conn, "mic.html"
-#  end
 end

@@ -189,8 +189,9 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
     sctxt.strokeStyle = "#FFFFFF";
     sctxt.lineWidth = 2;
 
-    let hostname = "motelligence.com";
-    var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
+    let host = window.speakerServiceHost;
+    let port = window.speakerServicePort;
+    var client = new BinaryClient("wss://"+host+":"+port+"/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
 
         var clientStream = client.createStream();
@@ -207,7 +208,7 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                     var source = audioCtx.createMediaStreamSource(stream);
                     // Create a biquadfilter
                     var biquadFilter = audioCtx.createBiquadFilter();
-                    biquadFilter.type = "lowpass";
+                    biquadFilter.type = "lowshelf";
                     biquadFilter.frequency.value = 5000;
                     biquadFilter.gain.value = 0.3;
                     // connect the AudioBufferSourceNode to the gainNode

@@ -1,5 +1,7 @@
 <%= if hasAccess(@conn) do %>
 <script>window.userToken = "<%= assigns[:user_token] %>"</script>
+<script>window.speakerServiceHost = "<%= getSpeakerServiceHost %>"</script>
+<script>window.speakerServicePort = "<%= getSpeakerServicePort %>"</script>
 <ul class="nav nav-pills pull-right">
     <li><%= link "Sign out", to: participant_path(@conn, :delete) %></li>
 </ul>

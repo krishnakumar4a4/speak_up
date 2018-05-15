@@ -20,4 +20,12 @@ defmodule SpeakUpWeb.ParticipantView do
         {false, "Unknown"}
     end
   end
+
+  def getSpeakerServiceHost() do
+    Application.get_env(:speak_up, :speaker_service_host, "localhost")
+  end
+
+  def getSpeakerServicePort() do
+    Application.get_env(:speak_up, :speaker_service_port, 8443)
+  end
 end

@@ -7,7 +7,9 @@ use Mix.Config
 
 # General application configuration
 config :speak_up,
-  ecto_repos: [SpeakUp.Repo]
+  ecto_repos: [SpeakUp.Repo],
+  speaker_service_host: "localhost",
+  speaker_service_port: 8443
 
 # Configures the endpoint
 config :speak_up, SpeakUpWeb.Endpoint,
