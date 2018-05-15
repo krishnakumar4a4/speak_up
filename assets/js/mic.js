@@ -217,9 +217,9 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                     source.connect(biquadFilter);
 
                     //Create audio analyzer node
-                    var analyser = audioCtx.createAnalyser();
-                    analyser.fftSize = 2048;
-                    analyser.smoothingTimeConstant = 0.1;
+                    // var analyser = audioCtx.createAnalyser();
+                    // analyser.fftSize = 2048;
+                    // analyser.smoothingTimeConstant = 0.1;
 
                     //Buffer size for script processor should be either 0 or starts from 256 and multiples
                     var bufferSize = 0;
@@ -229,15 +229,14 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                         if (!clientStream.writable) return;
                         var left = e.inputBuffer.getChannelData(0);
                         if(clientStream.writable) clientStream.write(convertoFloat32ToInt16(left));
-                        // draw();
                     };
 
                     //Add a 0 gain node to suppress output from speaker
                     let gainNode = audioCtx.createGain();
                     gainNode.gain.value = 0;
 
-                    biquadFilter.connect(analyser);
-                    analyser.connect(recorder);
+                    biquadFilter.connect(recorder);
+                    // analyser.connect(recorder);
                     recorder.connect(gainNode);
                     gainNode.connect(audioCtx.destination);
                     // Get new mouse pointer coordinates when mouse is moved
@@ -289,12 +288,15 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
         }
 
         function convertoFloat32ToInt16(buffer) {
-            var l = buffer.length;
-            var buf = new Int16Array(l);
+            let l = buffer.length;
+            let buf = new Int16Array(l);
 
             while (l--) {
-                buf[l] = buffer[l] * 0xFFFF;    //convert to 16 bit
+                // buf[l] = buffer[l] * 0xFFFF;    //convert to 16 bit
+                let s = Math.max(-1, Math.min(1, buffer[l]));
+                buf[l] = s < 0 ? s * 0x8000 : s * 0x7FFF;
             }
+            // console.log("float32 ",buffer,"int16 ",buf.buffer);
             return buf.buffer
         }
     });
