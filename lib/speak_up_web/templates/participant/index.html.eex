@@ -1,3 +1,4 @@
+<div id="header">
 <h1 id="page-header-name"> Participant Sign Up </h1>
 <%= form_for @conn, participant_path(@conn, :create), [as: :participant], fn f -> %>
 <div class = "form-group">
@@ -8,3 +9,4 @@
 </div>
 <%= submit "Sign in", class: "btn btn-primary"%>
 <%end%>
+</div>

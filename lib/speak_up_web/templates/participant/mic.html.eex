@@ -28,12 +28,6 @@
   </div>
 </div>
 <div>
-<input type="range" min="1" max="40">
 <canvas width="512" height="200"></canvas>
-<pre></pre>
-<h3>Connection Status</h3>
-<p>Biquad filter frequency response for: </p>
-<ul class="freq-response-output">
-</ul>
 </div>
 <%end%>

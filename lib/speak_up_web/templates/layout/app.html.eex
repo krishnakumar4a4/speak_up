@@ -11,11 +11,14 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
 </head>
 
-<body>
-<div class="container">
+<body id="top">
+<div>
     <header class="header">
         <nav role="navigation">
             <ul class="nav nav-pills pull-right">
+                <li>
+                    <button><a href="/">Home</a></button>
+                </li>
                 <%= if @user do %>
                 <li><%= Map.get(@user,"email") %></li>
                 <li>

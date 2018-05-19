@@ -296,7 +296,6 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                 let s = Math.max(-1, Math.min(1, buffer[l]));
                 buf[l] = s < 0 ? s * 0x8000 : s * 0x7FFF;
             }
-            // console.log("float32 ",buffer,"int16 ",buf.buffer);
             return buf.buffer
         }
     });

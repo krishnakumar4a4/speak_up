@@ -20,7 +20,13 @@ exports.config = {
             // }
         },
         stylesheets: {
-            joinTo: "css/app.css"
+            joinTo: "css/app.css",
+            before: [
+                "site/css/font-awesome.min.css",
+                "site/css/ie8.css",
+                "site/css/ie9.css",
+                "site/css/main.css"
+            ]
         },
         templates: {
             joinTo: "js/app.js"
