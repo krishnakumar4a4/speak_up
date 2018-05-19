@@ -1,4 +1,4 @@
-<div id="header">
+<div id="custom-header">
 
  <h1 id="page-header-name"> Moderator Login </h1>
  <%= form_for @conn, session_path(@conn, :create), [as: :session], fn f -> %>

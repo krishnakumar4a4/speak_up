@@ -21,7 +21,7 @@ exports.config = {
         },
         stylesheets: {
             joinTo: "css/app.css",
-            before: [
+            after: [
                 "site/css/font-awesome.min.css",
                 "site/css/ie8.css",
                 "site/css/ie9.css",

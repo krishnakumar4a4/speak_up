@@ -1,4 +1,4 @@
-<div id="header">
+<div id="custom-header">
 <h1 id="page-header-name"> Participant Sign Up </h1>
 <%= form_for @conn, participant_path(@conn, :create), [as: :participant], fn f -> %>
 <div class = "form-group">

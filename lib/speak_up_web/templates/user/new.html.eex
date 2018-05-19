@@ -1,4 +1,4 @@
-<div id="header">
+<div id="custom-header">
 
  <h1 id="page-header-name">Moderator Signup</h1>
  <%= form_for @changeset, user_path(@conn, :create), fn f -> %>

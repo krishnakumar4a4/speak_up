@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
 </head>
 
-<body id="top">
+<body>
 <div>
     <header class="header">
         <nav role="navigation">
@@ -20,7 +20,6 @@
                     <button><a href="/">Home</a></button>
                 </li>
                 <%= if @user do %>
-                <li><%= Map.get(@user,"email") %></li>
                 <li>
                     <%= if Map.get(@user,"current_user") do %>
                     <%= link "Sign out", to: session_path(@conn, :delete, Map.get(@user,"current_user")), method: "delete" %>

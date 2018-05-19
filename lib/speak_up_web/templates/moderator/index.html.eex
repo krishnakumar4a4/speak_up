@@ -1,34 +1,40 @@
 <%= if @user do %>
-<%= form_for @conn, moderator_path(@conn, :switch_control), [as: :switch], fn f ->%>
-<%= radio_button f, :mode, :auto, checked: true%> auto
-<%= radio_button f, :mode, :manual, checked: false%> manual
-
-<%= radio_button f, :type, :one_by_one, checked: true%> one-by-one
-<%= radio_button f, :type, :discussion, checked: false%> Discussion
-<%= submit "Submit", class: "btn btn-primary"%>
-<% end %>
+<div id="custom-header">
 <script>window.moderatorToken = "<%= Map.get(@user,"token") %>"</script>
 <script>window.moderatorEmail = "<%= Map.get(@user,"email") %>"</script>
-<div id="moderator-layout-view">
-<div id="moderator-layout-table">
-  <h3>Connected people</h3>
-  <table class="table">
-      <thead>
-      <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Control</th>
-      </tr>
-      </thead>
-      <tbody id="table-body">
-      </tbody>
-  </table>
-</div>
-<div id="moderator-layout-controls">
-  <label>Gain -40dB to 40dB </label>
-  <input id="mic-input-gain" type="range" min="-40" max="40" step="0.1" value="-20" onchange=""/>
-  <label>Frequency 0 to 22100Hz</label>
-  <input id="mic-input-frequency" type="range" min="0" max="22100" step="100" value="1000"/>
-</div>
+
+  <h1 id="moderator-layout-view-title">Welcome <%= Map.get(@user,"current_user").name %> !!!</h1>
+<%= form_for @conn, moderator_path(@conn, :switch_control), [as: :switch], fn f ->%>
+<%= radio_button f, :mode, :auto, checked: true%> <label>auto</label>
+<%= radio_button f, :mode, :manual, checked: false%> <label>manual</label>
+
+<%= radio_button f, :type, :one_by_one, checked: true%> <label>one-by-one</label>
+<%= radio_button f, :type, :discussion, checked: false%> <label>Discussion</label>
+<%= submit "Submit", class: "btn btn-primary"%>
+<% end %>
+
+  <div id="moderator-layout-view">
+  <div id="moderator-layout-table">
+    <h3>Connected people</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th id="th-center">Name</th>
+            <th id="th-center">Email</th>
+            <th id="th-center">Control</th>
+        </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+  </div>
+  <div id="moderator-layout-controls">
+    <h3>Participant controls</h3>
+    <label>Gain -40dB to 40dB </label>
+    <input id="mic-input-gain" type="range" min="-40" max="40" step="0.1" value="-20" onchange=""/>
+    <label>Frequency 0 to 22100Hz</label>
+    <input id="mic-input-frequency" type="range" min="0" max="22100" step="100" value="1000"/>
+  </div>
+  </div>
 </div>
 <% end %>
