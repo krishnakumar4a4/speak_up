@@ -42,12 +42,17 @@
                   <%end%>
                 </li>
                 <% end %>
+                <li>
+                  <%=if hasAccess(@conn) do %>
+                     <%= link "Sign out", to: participant_path(@conn, :delete) %>
+                  <%end%>
+                </li>
             </ul>
         </nav>
     </header>
 
-    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <p class="alert alert-info custom-alert" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger custom-alert" role="alert"><%= get_flash(@conn, :error) %></p>
 
     <main role="main">
         <%= render @view_module, @view_template, assigns %>

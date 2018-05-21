@@ -2,13 +2,12 @@
 @import 'font-awesome';
 
 #organizer-msg-window {
-  width: 80%;
+  min-width: 20%;
   height: 5em;
-  margin-bottom: 25px;
   border-radius: 100px;
-  border-color: #46b8da;
-  border-style: solid;
+  border: solid #ffffff;
   display: inline-block;
+  text-align: center;
 }
 
 #wanna-speak {
@@ -19,13 +18,11 @@
 }
 
 #wanna-speak-border {
-  border-style: solid;
   width: 120px;
   height: 120px;
   border-radius: 100px;
   display: inline-block;
-  border-color: #46b8da;
-  border-width: 6px;
+  border: 6px solid #ffffff;
 }
 
 #wanna-speak-border-green {
@@ -34,7 +31,7 @@
   height: 120px;
   border-radius: 100px;
   display: inline-block;
-  border-color: forestgreen;
+  border-color: #ffffff;
   border-width: 6px;
 }
 
@@ -44,7 +41,7 @@
   height: 120px;
   border-radius: 100px;
   display: inline-block;
-  border-color: orangered;
+  border-color: #ffffff;
   border-width: 6px;
 }
 
@@ -61,15 +58,15 @@
 }
 
 .fa-microphone {
-  color: #46b8da;
+  color: #ffffff;
 }
 
 .fa-microphone-green {
-  color: forestgreen;
+  color: #ffffff;
 }
 
 .fa-microphone-red {
-  color: orangered;
+  color: #ffffff;
 }
 
 .loader {
@@ -107,7 +104,7 @@
 
 #page-header-name {
   text-align: center;
-  background-color: #4696e5;
+  //background-color: #4696e5;
 }
 
 #moderator-layout-view {
@@ -139,6 +136,10 @@
   text-align: center;
 }
 
+#participant-mic-position {
+  margin-left: 35%;
+}
+
 /* Overriden header from template */
 #custom-header {
   background-color: #4696e5;
@@ -157,8 +158,9 @@
   background-attachment: fixed, fixed;
   background-size: auto, cover;
   //height: 100vh;
-  min-height: 35em;
+  min-height: 40em;
   width: 100%;
+  margin-top: 45px;
 }
 
 #custom-header input[type="submit"],
@@ -209,8 +211,9 @@
   color: inherit;
   background-color: rgba(255, 255, 255, 0.075);
   border-color: rgba(255, 255, 255, 0.25);
-  max-width: 500px;
-  min-width: 150px;
+  max-width: 40%;
+  min-width: 30%;
+  margin-left: 30%;
 }
 
 #custom-header input[type="text"]:focus,
@@ -576,4 +579,10 @@ body.is-loading #custom-header .image img {
 
 form {
   text-align: center;
+}
+
+.custom-alert {
+  width: 100%;
+  z-index: -1;
+  position: absolute;
 }

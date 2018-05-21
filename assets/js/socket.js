@@ -13,6 +13,7 @@ let moderatorChannel;
 
 function addMicIconForError() {
     let parentNode = document.getElementById("participant-mic-position");
+    setMainBgColor(parentNode,"#e54848");
     let participantMicIconsHolder = document.getElementById("participant-mic-icons");
     if(participantMicIconsHolder) parentNode.removeChild(participantMicIconsHolder);
     participantMicIconsHolder = document.createElement("div");
@@ -41,6 +42,7 @@ function addMicIconForError() {
 
 function addWannaSpeakIcon() {
     let parentNode = document.getElementById("participant-mic-position");
+    setMainBgColor(parentNode,"#4696e5");
     let participantMicIconsHolder = document.getElementById("participant-mic-icons");
     if(participantMicIconsHolder) parentNode.removeChild(participantMicIconsHolder);
     participantMicIconsHolder = document.createElement("div");
@@ -76,6 +78,7 @@ function addWannaSpeakIcon() {
 
 function addWannaSpeakInGreen() {
     let parentNode = document.getElementById("participant-mic-position");
+    setMainBgColor(parentNode,"#48e596");
     let participantMicIconsHolder = document.getElementById("participant-mic-icons");
     if(participantMicIconsHolder) parentNode.removeChild(participantMicIconsHolder);
     participantMicIconsHolder = document.createElement("div");
@@ -155,6 +158,11 @@ function removeAllChildren(node) {
     while (node.hasChildNodes()) {
         node.removeChild(node.lastChild);
     }
+}
+
+function setMainBgColor(node, color) {
+    let mainBgNode = node.parentNode;
+    mainBgNode.setAttribute('style',"background-color: "+color);
 }
 
 function connect(connectMicFunc) {

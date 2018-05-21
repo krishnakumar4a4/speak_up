@@ -10,4 +10,8 @@ defmodule SpeakUpWeb.LayoutView do
         true
     end
   end
+
+  def hasAccess(conn) do
+    !shouldShowParticipantSignup(conn)
+  end
 end

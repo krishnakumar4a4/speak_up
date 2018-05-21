@@ -3,15 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="f52cf3fd-4a1a-4031-8209-54ca8f082671" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/brunch-config.js" afterPath="$PROJECT_DIR$/assets/brunch-config.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/css/app.scss" afterPath="$PROJECT_DIR$/assets/css/app.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/config.exs" afterPath="$PROJECT_DIR$/config/config.exs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/dev.exs" afterPath="$PROJECT_DIR$/config/dev.exs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/css/phoenix.css" afterPath="$PROJECT_DIR$/assets/css/phoenix.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/js/socket.js" afterPath="$PROJECT_DIR$/assets/js/socket.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/templates/layout/app.html.eex" afterPath="$PROJECT_DIR$/lib/speak_up_web/templates/layout/app.html.eex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/templates/moderator/index.html.eex" afterPath="$PROJECT_DIR$/lib/speak_up_web/templates/moderator/index.html.eex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/templates/participant/index.html.eex" afterPath="$PROJECT_DIR$/lib/speak_up_web/templates/participant/index.html.eex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/templates/session/new.html.eex" afterPath="$PROJECT_DIR$/lib/speak_up_web/templates/session/new.html.eex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/templates/user/new.html.eex" afterPath="$PROJECT_DIR$/lib/speak_up_web/templates/user/new.html.eex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/templates/participant/mic.html.eex" afterPath="$PROJECT_DIR$/lib/speak_up_web/templates/participant/mic.html.eex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/speak_up_web/views/layout_view.ex" afterPath="$PROJECT_DIR$/lib/speak_up_web/views/layout_view.ex" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -35,61 +32,61 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="show.html.eex" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/user/show.html.eex">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html.eex" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/moderator/index.html.eex">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2">
-              <caret line="13" column="9" lean-forward="false" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="participant_controller.ex" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/controllers/participant_controller.ex">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="950">
-              <caret line="50" column="5" lean-forward="false" selection-start-line="50" selection-start-column="5" selection-end-line="50" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="router.ex" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/router.ex">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-488">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="app.scss" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/assets/css/app.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4218">
-              <caret line="222" column="1" lean-forward="false" selection-start-line="222" selection-start-column="1" selection-end-line="222" selection-end-column="1" />
+            <state relative-caret-position="198">
+              <caret line="107" column="1" lean-forward="true" selection-start-line="107" selection-start-column="1" selection-end-line="107" selection-end-column="1" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="new.html.eex" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/user/new.html.eex">
+      <file leaf-file-name="phoenix.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/css/phoenix.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
+            <state relative-caret-position="-34003">
+              <caret line="71" column="3" lean-forward="false" selection-start-line="71" selection-start-column="3" selection-end-line="71" selection-end-column="3" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.html.eex" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/layout/app.html.eex">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="232">
+              <caret line="54" column="45" lean-forward="false" selection-start-line="54" selection-start-column="45" selection-end-line="54" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="socket.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/assets/js/socket.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1399">
+              <caret line="80" column="38" lean-forward="false" selection-start-line="80" selection-start-column="38" selection-end-line="80" selection-end-column="38" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="participant_view.ex" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/views/participant_view.ex">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="209">
+              <caret line="11" column="5" lean-forward="false" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mic.html.eex" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/participant/mic.html.eex">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="35">
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -98,38 +95,8 @@
       <file leaf-file-name="index.html.eex" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/participant/index.html.eex">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="new.html.eex" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/session/new.html.eex">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/assets/css/site/css/main.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="2042" column="26" lean-forward="false" selection-start-line="2042" selection-start-column="26" selection-end-line="2042" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="brunch-config.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/assets/brunch-config.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="23" column="20" lean-forward="false" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+            <state relative-caret-position="19">
+              <caret line="1" column="25" lean-forward="false" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -139,8 +106,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>&quot;status_code</find>
-      <find>&quot;status_code&quot;</find>
       <find>&quot;status_code&quot; =</find>
       <find>&quot;status_code&quot; =&gt;</find>
       <find>&quot;status_code&quot; =&gt; -</find>
@@ -164,11 +129,13 @@
       <find>Application.g</find>
       <find>Application.get</find>
       <find>Magna</find>
-      <find>header</find>
       <find>fractal-695578665</find>
       <find>#header</find>
       <find>* form</find>
       <find>opacity</find>
+      <find>participant-mic-position</find>
+      <find>header</find>
+      <find>.header</find>
     </findStrings>
     <replaceStrings>
       <replace>#custom-header</replace>
@@ -185,7 +152,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/lib/speak_up_web/views/control_view.ex" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/controllers/mic_controller.ex" />
         <option value="$PROJECT_DIR$/assets/js/record-live.audio.js" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.eex" />
@@ -197,7 +163,6 @@
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_3.html" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/templates/partcipant/index.html.eex" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_4.html" />
-        <option value="$PROJECT_DIR$/lib/speak_up_web/views/layout_view.ex" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_5.html" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/router.ex" />
         <option value="$PROJECT_DIR$/lib/speak_up/participant_websocket_supervisor.ex" />
@@ -218,23 +183,25 @@
         <option value="$PROJECT_DIR$/config/sys.config" />
         <option value="$PROJECT_DIR$/assets/js/app.js" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/channels/moderator_channel.ex" />
-        <option value="$PROJECT_DIR$/assets/js/socket.js" />
         <option value="$PROJECT_DIR$/AddLECerts" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/channels/participant_mic_channel.ex" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/controllers/participant_controller.ex" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/views/participant_view.ex" />
         <option value="$PROJECT_DIR$/assets/js/mic.js" />
-        <option value="$PROJECT_DIR$/lib/speak_up_web/templates/participant/mic.html.eex" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/templates/page/index.html.eex" />
         <option value="$PROJECT_DIR$/config/dev.exs" />
         <option value="$PROJECT_DIR$/config/config.exs" />
-        <option value="$PROJECT_DIR$/lib/speak_up_web/templates/layout/app.html.eex" />
         <option value="$PROJECT_DIR$/assets/brunch-config.js" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/templates/moderator/index.html.eex" />
-        <option value="$PROJECT_DIR$/assets/css/site/css/main.css" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/templates/session/new.html.eex" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/templates/user/new.html.eex" />
         <option value="$PROJECT_DIR$/lib/speak_up_web/templates/participant/index.html.eex" />
+        <option value="$PROJECT_DIR$/assets/css/site/css/main.css" />
+        <option value="$PROJECT_DIR$/assets/js/socket.js" />
+        <option value="$PROJECT_DIR$/lib/speak_up_web/views/layout_view.ex" />
+        <option value="$PROJECT_DIR$/lib/speak_up_web/templates/participant/mic.html.eex" />
+        <option value="$PROJECT_DIR$/assets/css/phoenix.css" />
+        <option value="$PROJECT_DIR$/lib/speak_up_web/templates/layout/app.html.eex" />
         <option value="$PROJECT_DIR$/assets/css/app.scss" />
       </list>
     </option>
@@ -315,28 +282,6 @@
               <option name="myItemId" value="priv" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fonts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="speak_up" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="speak_up" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="priv" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -367,6 +312,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="speak_up_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="speak_up" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="speak_up" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="speak_up_web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -514,7 +481,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1321,12 +1292,12 @@
       <workItem from="1525849863481" duration="21700000" />
       <workItem from="1526185323254" duration="8640000" />
       <workItem from="1526610854547" duration="1532000" />
-      <workItem from="1526692182292" duration="16052000" />
+      <workItem from="1526692182292" duration="22683000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="368088000" />
+    <option name="totallyTimeSpent" value="374719000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1428,13 +1399,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lib/speak_up/participant_websocket_supervisor.ex">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="60" lean-forward="false" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/priv/keys/localhost.cert">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1540,13 +1504,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/js/socket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="387" column="38" lean-forward="false" selection-start-line="387" selection-start-column="22" selection-end-line="387" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/speak_up_web/channels/participant_mic_channel.ex">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="98">
@@ -1578,13 +1535,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/assets/css/phoenix.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18658">
-          <caret line="8" column="57915" lean-forward="false" selection-start-line="8" selection-start-column="57912" selection-end-line="8" selection-end-column="57915" />
         </state>
       </provider>
     </entry>
@@ -1630,14 +1580,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/participant/mic.html.eex">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="32" column="6" lean-forward="false" selection-start-line="32" selection-start-column="6" selection-end-line="32" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/page/index.html.eex">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
@@ -1654,26 +1596,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/views/participant_view.ex">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-15">
-          <caret line="11" column="5" lean-forward="true" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/config.exs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
           <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/layout/app.html.eex">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="23" column="54" lean-forward="false" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="54" />
           <folding />
         </state>
       </provider>
@@ -1750,10 +1676,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/css/site/css/main.css">
+    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/user/new.html.eex">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="2042" column="26" lean-forward="false" selection-start-line="2042" selection-start-column="26" selection-end-line="2042" selection-end-column="26" />
+        <state relative-caret-position="0">
+          <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
           <folding />
         </state>
       </provider>
@@ -1766,26 +1692,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/user/new.html.eex">
+    <entry file="file://$PROJECT_DIR$/assets/css/site/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
+        <state relative-caret-position="19">
+          <caret line="2042" column="26" lean-forward="false" selection-start-line="2042" selection-start-column="26" selection-end-line="2042" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/participant/index.html.eex">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="16" lean-forward="false" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="16" />
+        <state relative-caret-position="19">
+          <caret line="1" column="25" lean-forward="false" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/js/socket.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1399">
+          <caret line="80" column="38" lean-forward="false" selection-start-line="80" selection-start-column="38" selection-end-line="80" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/views/participant_view.ex">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="5" lean-forward="false" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/css/phoenix.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34003">
+          <caret line="71" column="3" lean-forward="false" selection-start-line="71" selection-start-column="3" selection-end-line="71" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/views/layout_view.ex">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="14" column="5" lean-forward="false" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/layout/app.html.eex">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="54" column="45" lean-forward="false" selection-start-line="54" selection-start-column="45" selection-end-line="54" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/speak_up_web/templates/participant/mic.html.eex">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="35">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/assets/css/app.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4218">
-          <caret line="222" column="1" lean-forward="false" selection-start-line="222" selection-start-column="1" selection-end-line="222" selection-end-column="1" />
+        <state relative-caret-position="198">
+          <caret line="107" column="1" lean-forward="true" selection-start-line="107" selection-start-column="1" selection-end-line="107" selection-end-column="1" />
           <folding />
         </state>
       </provider>
