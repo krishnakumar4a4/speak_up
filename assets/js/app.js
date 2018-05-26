@@ -19,6 +19,7 @@ import "phoenix_html"
 
 import {connect} from "./socket"
 
+//element is only available on home page
 document.getElementById("event-page-jump")
     .addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {

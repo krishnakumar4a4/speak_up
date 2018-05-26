@@ -8,6 +8,8 @@ defmodule SpeakUp.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
+      # Start the node speaker and erlang moderator applications
+      worker(SpeakUp.ExternalServices,[]),
       # Start the Ecto repository
       supervisor(SpeakUp.Repo, []),
       # Start the endpoint when the application starts
