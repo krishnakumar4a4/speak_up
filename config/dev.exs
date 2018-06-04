@@ -7,8 +7,8 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :speak_up, SpeakUpWeb.Endpoint,
-  http: [port: 4000],
-#  host: "10.136.124.160",
+#  http: [port: 4000],
+  host: "10.136.124.24",
   https: [port: 4443, keyfile: "priv/keys/privkey.pem", certfile: "priv/keys/fullchain.pem"],
   debug_errors: true,
   code_reloader: true,

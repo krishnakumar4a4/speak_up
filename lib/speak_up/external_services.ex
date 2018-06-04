@@ -4,6 +4,7 @@ defmodule SpeakUp.ExternalServices do
   def start_link() do
     {:ok, pid} = GenServer.start_link(__MODULE__, [], name: ExternalServices)
     GenServer.cast(pid, :start_services)
+    :timer.sleep(5000)
     GenServer.cast(pid, :connect_nodes)
     {:ok, pid}
   end
@@ -13,13 +14,14 @@ defmodule SpeakUp.ExternalServices do
   end
 
   def handle_cast(:start_services, state) do
-    pcmStreamPlayback = spawn_link fn -> System.cmd("node",["../speakup_stream_player/pcm-stream-playback/app.js","2>","/dev/null"]) end
+    pcmStreamPlayback = spawn_link fn -> System.cmd("node",["app.js","2>","/dev/null"],cd: "../speakup_stream_player/pcm-stream-playback/") end
     speakupStreamPlayer = spawn_link fn -> System.cmd("rebar3",["shell","--name","erlang_speak_up@127.0.0.1", "--config","sys.config"],cd: "../speakup_stream_player/") end
     {:noreply, %{"pcmStreamPlayback" => pcmStreamPlayback, "speakupStreamPlayer" => speakupStreamPlayer}}
+#    {:noreply,%{}}
   end
 
   def handle_cast(:connect_nodes, state) do
-    :net_kernel.connect_node('erlang_speak_up@127.0.0.1')
+    Node.connect(:"erlang_speak_up@127.0.0.1")
     {:noreply, state}
   end
 end

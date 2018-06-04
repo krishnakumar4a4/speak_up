@@ -18,11 +18,3 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 import {connect} from "./socket"
-
-//element is only available on home page
-document.getElementById("event-page-jump")
-    .addEventListener("keyup", function(event) {
-        if (event.keyCode === 13) {
-            window.open("https://"+event.target.value+":4443","_self")
-        }
-    });

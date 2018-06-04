@@ -243,7 +243,7 @@ function connect(connectMicFunc) {
         let messageToBeDisplayed;
         removeAllChildren(statusMessages);
         if(payload.status_code === -1) {
-            messageToBeDisplayed = "You request to speak is under consideration";
+            messageToBeDisplayed = "Your request to speak is under consideration";
             addWaitingSpinner();
             connectMicFunc(payload.status_message, channel);
         } else if(payload.status_code === -3 ){

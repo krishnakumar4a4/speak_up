@@ -57,7 +57,7 @@ export function connectMicDynamicCompressor(temporaryTalktoken) {
 //Created for fun, do not use this
 export function connectMicDecayingEcho(temporaryTalktoken) {
     // console.log("ttt",temporaryTalktoken);
-    let hostname = "10.136.126.126";
+    let hostname = "localhost";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
 
@@ -125,7 +125,7 @@ export function connectMicDecayingEcho(temporaryTalktoken) {
 
 export function connectMicRaw(temporaryTalktoken) {
     // console.log("ttt",temporaryTalktoken);
-    let hostname = "10.136.126.126";
+    let hostname = "localhost";
     var client = new BinaryClient("wss://"+hostname+":8443/websocket"+"?ttt="+temporaryTalktoken);
     client.on('open', function () {
 
@@ -182,12 +182,12 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
     console.log("ttt",temporaryTalktoken);
     var range = document.querySelector('input');
 
-    // prepare canvas for rendering
-    var canvas = document.getElementsByTagName("canvas")[0];
-    var sctxt = canvas.getContext("2d");
-    sctxt.fillRect(0, 0, 512, 200);
-    sctxt.strokeStyle = "#FFFFFF";
-    sctxt.lineWidth = 2;
+    // // prepare canvas for rendering
+    // var canvas = document.getElementsByTagName("canvas")[0];
+    // var sctxt = canvas.getContext("2d");
+    // sctxt.fillRect(0, 0, 512, 200);
+    // sctxt.strokeStyle = "#FFFFFF";
+    // sctxt.lineWidth = 2;
 
     let host = window.speakerServiceHost;
     let port = window.speakerServicePort;
@@ -204,7 +204,7 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                 .then(function (stream) {
                     // Create a MediaStreamAudioSourceNode
                     // Feed the HTMLMediaElement into it
-                    var audioCtx = new AudioContext();
+                    var audioCtx = new AudioContext() || new webkitAudioContext();
                     var source = audioCtx.createMediaStreamSource(stream);
                     // Create a biquadfilter
                     var biquadFilter = audioCtx.createBiquadFilter();
@@ -259,26 +259,26 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                     });
 
                     // data from the analyser node
-                    var buffer = new Uint8Array(analyser.frequencyBinCount);
+                    // var buffer = new Uint8Array(analyser.frequencyBinCount);
 
-                    function draw() {
-                        analyser.getByteTimeDomainData(buffer);
-                        // console.log("buffer data",buffer);
-
-                        // do the canvas painting
-                        var width = canvas.width;
-                        var height = canvas.height;
-                        var step = parseInt(buffer.length / width);
-                        sctxt.fillRect(0, 0, width, height);
-                        sctxt.drawImage(canvas, 0, 0, width, height);
-                        sctxt.beginPath();
-                        sctxt.moveTo(0, buffer[0] * height / 256);
-                        for(var i=1; i< width; i++) {
-                            sctxt.lineTo(i, buffer[i*step] * height / 256);
-                        }
-                        sctxt.stroke();
-                        window.requestAnimationFrame(draw);
-                    }
+                    // function draw() {
+                    //     analyser.getByteTimeDomainData(buffer);
+                    //     // console.log("buffer data",buffer);
+                    //
+                    //     // do the canvas painting
+                    //     var width = canvas.width;
+                    //     var height = canvas.height;
+                    //     var step = parseInt(buffer.length / width);
+                    //     sctxt.fillRect(0, 0, width, height);
+                    //     sctxt.drawImage(canvas, 0, 0, width, height);
+                    //     sctxt.beginPath();
+                    //     sctxt.moveTo(0, buffer[0] * height / 256);
+                    //     for(var i=1; i< width; i++) {
+                    //         sctxt.lineTo(i, buffer[i*step] * height / 256);
+                    //     }
+                    //     sctxt.stroke();
+                    //     window.requestAnimationFrame(draw);
+                    // }
                 })
                 .catch(function (err) {
                     console.log('The following gUM error occured: ' + err);
