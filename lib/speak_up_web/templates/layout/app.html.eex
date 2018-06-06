@@ -59,7 +59,7 @@
     </main>
 
 </div> <!-- /container -->
-<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+<script src = "<%= static_path(@conn, "/js/app.js") %>"></script>
 <script src = "<%= static_path(@conn, "/js/binary.js") %>" ></script>
 </body>
 </html>

@@ -19,7 +19,9 @@ binaryFeatures.useArrayBufferView = !binaryFeatures.useBlobBuilder && (function(
 })();
 binaryFeatures.supportsBinaryWebsockets = (function(){
   try {
-    var wstest = new WebSocket('ws://null');
+    //Modified to check for ws over ssl
+    // var wstest = new WebSocket('ws://null');
+    var wstest = new WebSocket('wss://null');
     wstest.onerror = function(){};
     if (typeof(wstest.binaryType) !== "undefined") {
       return true;

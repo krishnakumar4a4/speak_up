@@ -222,7 +222,7 @@ export function connectMicBiquadLowshelf(temporaryTalktoken, channel) {
                     // analyser.smoothingTimeConstant = 0.1;
 
                     //Buffer size for script processor should be either 0 or starts from 256 and multiples
-                    var bufferSize = 0;
+                    var bufferSize = 4096;
                     var recorder = audioCtx.createScriptProcessor(bufferSize, 1, 1);
 
                     recorder.onaudioprocess = function (e) {
